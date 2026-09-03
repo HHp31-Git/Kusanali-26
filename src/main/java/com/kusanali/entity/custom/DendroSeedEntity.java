@@ -1,6 +1,6 @@
 package com.kusanali.entity.custom;
 
-import com.kusanali.entity.other.SeedEffectTracker;
+import com.kusanali.entity.tracker.SeedEffectTracker;
 import com.kusanali.register.ModDamageTypes;
 import com.kusanali.register.ModEffects;
 import net.minecraft.entity.Entity;

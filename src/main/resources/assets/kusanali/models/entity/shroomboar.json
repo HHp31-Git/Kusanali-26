@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:entity/pig/pig",
+  "textures": {
+    "layer0": "kusanali:textures/entity/shroomboar/shroomboar.png"
+  }
+}

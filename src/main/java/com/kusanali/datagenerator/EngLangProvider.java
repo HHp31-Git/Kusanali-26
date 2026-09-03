@@ -1,5 +1,6 @@
 package com.kusanali.datagenerator;
 
+import com.kusanali.entity.ModEntities;
 import com.kusanali.register.ModBlocks;
 import com.kusanali.register.ModEnchants;
 import com.kusanali.register.ModItems;
@@ -21,6 +22,7 @@ public class EngLangProvider extends FabricLanguageProvider {
         translationBuilder.add(ModItems.IVE_NEVER_FORGOTTEN, "I've Never Forgotten");
         translationBuilder.add(ModItems.CLIENT, "Void Client");
         translationBuilder.add(ModItems.AJILENAKH, "ajilenakh nut");
+        translationBuilder.add(ModItems.SAPWOOD_BLADE, "sapwood blade");
 
         translationBuilder.add(ModItems.ANEMO_ITEM, "anemo item");
         translationBuilder.add(ModItems.CYRO_ITEM, "cyro item");
@@ -119,5 +121,8 @@ public class EngLangProvider extends FabricLanguageProvider {
         translationBuilder.add(ModEnchants.GEO_ENCHANT_BOW, "geo arrow");
         translationBuilder.add(ModEnchants.HYDRO_ENCHANT_BOW, "hydro arrow");
         translationBuilder.add(ModEnchants.DENDRO_ENCHANT_BOW, "dendro arrow");
+
+        translationBuilder.add(ModEntities.SHROOMBOAR, "shroomboar");
+        translationBuilder.add(ModEntities.DENDRO_SEED, "dendro seed");
     }
 }

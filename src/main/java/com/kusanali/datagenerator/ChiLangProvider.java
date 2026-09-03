@@ -1,5 +1,6 @@
 package com.kusanali.datagenerator;
 
+import com.kusanali.entity.ModEntities;
 import com.kusanali.register.ModBlocks;
 import com.kusanali.register.ModEnchants;
 import com.kusanali.register.ModItems;
@@ -22,6 +23,7 @@ public class ChiLangProvider extends FabricLanguageProvider {
         translationBuilder.add(ModItems.CLIENT, "虚空终端");
         translationBuilder.add(ModItems.AJILENAKH, "枣椰");
         translationBuilder.add(ModItems.TROUPE_SWORD, "旅团弯刀");
+        translationBuilder.add(ModItems.SAPWOOD_BLADE, " 原木刀");
 
         translationBuilder.add(ModItems.ANEMO_ITEM, "风元素");
         translationBuilder.add(ModItems.CYRO_ITEM, "冰元素");
@@ -119,5 +121,8 @@ public class ChiLangProvider extends FabricLanguageProvider {
         translationBuilder.add(ModEnchants.GEO_ENCHANT_BOW, "岩矢");
         translationBuilder.add(ModEnchants.HYDRO_ENCHANT_BOW, "水矢");
         translationBuilder.add(ModEnchants.DENDRO_ENCHANT_BOW, "草矢");
+
+        translationBuilder.add(ModEntities.SHROOMBOAR, "蕈猪");
+        translationBuilder.add(ModEntities.DENDRO_SEED, "草种子");
     }
 }

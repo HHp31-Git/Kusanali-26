@@ -40,7 +40,8 @@ public class ItemTagsProvider extends FabricTagProvider.ItemTagProvider {
                 .add(ModItems.IVE_NEVER_FORGOTTEN);
 
         getOrCreateTagBuilder(ItemTags.SWORDS)
-                .add(ModItems.TROUPE_SWORD);
+                .add(ModItems.TROUPE_SWORD)
+                .add(ModItems.SAPWOOD_BLADE);
 
         getOrCreateTagBuilder(ItemTags.PLANKS)
                 .add(ModBlocks.AJI_PLANKS.asItem());
@@ -79,7 +80,8 @@ public class ItemTagsProvider extends FabricTagProvider.ItemTagProvider {
                 .add(Items.GOLDEN_AXE)
                 .add(Items.DIAMOND_AXE)
                 .add(Items.NETHERITE_AXE)
-                .add(ModItems.TROUPE_SWORD);
+                .add(ModItems.TROUPE_SWORD)
+                .add(ModItems.SAPWOOD_BLADE);
         getOrCreateTagBuilder(EMERALD_UPDATE)
                 .add(ModItems.EMERALD_GEMSTONE)
                 .add(ModItems.EMERALD_CHUCK)

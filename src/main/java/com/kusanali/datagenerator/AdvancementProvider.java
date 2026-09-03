@@ -11,6 +11,7 @@ import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class AdvancementProvider extends FabricAdvancementProvider {
@@ -55,7 +56,7 @@ public class AdvancementProvider extends FabricAdvancementProvider {
                         Text.literal("枣椰蜜糖"),
                         Text.literal("SWEET!!"),
                         null,
-                        AdvancementFrame.GOAL,
+                        AdvancementFrame.TASK,
                         true,
                         true,
                         false
@@ -147,5 +148,40 @@ public class AdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .criterion("got_ts", InventoryChangedCriterion.Conditions.items(ModItems.TROUPE_SWORD))
                 .build(consumer, Kusanali.MOD_ID + "/got_ts");
+        Advancement gotEmeraldAdvancement = Advancement.Builder.create().parent(rootAdvancement)
+                .display(
+                        ModItems.EMERALD_GEMSTONE,
+                        Text.literal("生长碧翡"),
+                        Text.literal("『生命』一直都是目的，『智慧』才是手段"),
+                        null,
+                        AdvancementFrame.TASK,
+                        true,
+                        true,
+                        false
+                )
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .criterion("got_eg", InventoryChangedCriterion.Conditions.items(ModItems.EMERALD_GEMSTONE))
+                .criterion("got_ef", InventoryChangedCriterion.Conditions.items(ModItems.EMERALD_FRAGMENT))
+                .criterion("got_ec", InventoryChangedCriterion.Conditions.items(ModItems.EMERALD_CHUCK))
+                .criterion("got_es", InventoryChangedCriterion.Conditions.items(ModItems.EMERALD_SLIVER))
+                .requirements(new String[][]{
+                                {"got_eg", "got_ef", "got_ec", "got_es"}
+                        }
+                )
+                .build(consumer, Kusanali.MOD_ID + "/got_e");
+        Advancement gotEmeraldSwordAdvancement = Advancement.Builder.create().parent(gotEmeraldAdvancement)
+                .display(
+                        ModItems.SAPWOOD_BLADE,
+                        Text.literal("原木刀"),
+                        Text.literal("从兰那罗的故事中得到的武器，具有刀的形制，能够贯穿森林的敌人"),
+                        null,
+                        AdvancementFrame.TASK,
+                        true,
+                        true,
+                        false
+                )
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .criterion("got_eb", InventoryChangedCriterion.Conditions.items(ModItems.SAPWOOD_BLADE))
+                .build(consumer, Kusanali.MOD_ID + "/got_eb");
     }
 }

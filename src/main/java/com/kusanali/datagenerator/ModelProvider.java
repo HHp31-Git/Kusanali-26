@@ -57,5 +57,6 @@ public class ModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.PYRO_ITEM, Models.GENERATED);
 
         itemModelGenerator.register(ModItems.TROUPE_SWORD, Models.HANDHELD);
+        itemModelGenerator.register(ModItems.SAPWOOD_BLADE, Models.HANDHELD);
     }
 }

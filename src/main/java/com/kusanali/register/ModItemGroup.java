@@ -17,6 +17,7 @@ public class ModItemGroup {
             .entries((context, entries) -> {
                 entries.add(ModItems.FLOAT_DREAM);
                 entries.add(ModItems.TROUPE_SWORD);
+                entries.add(ModItems.SAPWOOD_BLADE);
                 entries.add(ModItems.EMERALD_GEMSTONE);
                 entries.add(ModItems.EMERALD_CHUCK);
                 entries.add(ModItems.EMERALD_FRAGMENT);

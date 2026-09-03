@@ -2,6 +2,7 @@ package com.kusanali.entity;
 
 import com.kusanali.entity.custom.DendroSeedEntity;
 import com.kusanali.entity.custom.SeedProjectileEntity;
+import com.kusanali.entity.original.ShroomboarEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -26,12 +27,22 @@ public class ModEntities {
                     Registries.ENTITY_TYPE,
                     new Identifier("kusanali", "seed_projectile"),
                     FabricEntityTypeBuilder.create(
-                                    SpawnGroup.MISC,
-                                    SeedProjectileEntity::new
-                            )
+                                    SpawnGroup.MISC, SeedProjectileEntity::new)
                             .dimensions(EntityDimensions.fixed(0.25f, 0.25f))
                             .trackRangeBlocks(64)
                             .trackedUpdateRate(20)
                             .build()
             );
+    public static final EntityType<ShroomboarEntity> SHROOMBOAR =
+            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, ShroomboarEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.9f, 0.9f))
+                    .build();
+
+    public static void register() {
+        Registry.register(
+                Registries.ENTITY_TYPE,
+                new Identifier("kusanali", "shroomboar"),
+                SHROOMBOAR
+        );
+    }
 }

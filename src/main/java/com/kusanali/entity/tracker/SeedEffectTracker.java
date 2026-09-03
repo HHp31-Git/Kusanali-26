@@ -1,4 +1,4 @@
-package com.kusanali.entity.other;
+package com.kusanali.entity.tracker;
 
 import com.kusanali.entity.custom.DendroSeedEntity;
 import net.minecraft.entity.Entity;

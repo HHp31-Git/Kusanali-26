@@ -121,6 +121,15 @@ public class RecipeProvider extends FabricRecipeProvider {
                 .criterion(FabricRecipeProvider.hasItem(Items.IRON_NUGGET),
                         FabricRecipeProvider.conditionsFromItem(Items.IRON_NUGGET))
                 .offerTo(consumer);
+        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, ModItems.SAPWOOD_BLADE)
+                .pattern(" c ").pattern(" c ").pattern(" b ")
+                .input('b', Items.STICK)
+                .criterion(FabricRecipeProvider.hasItem(Items.STICK),
+                        FabricRecipeProvider.conditionsFromItem(Items.STICK))
+                .input('c', ModItems.EMERALD_CHUCK)
+                .criterion(FabricRecipeProvider.hasItem(ModItems.EMERALD_CHUCK),
+                        FabricRecipeProvider.conditionsFromItem(ModItems.EMERALD_CHUCK))
+                .offerTo(consumer);
 
         ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.AJI_SAPLING, 1)
                 .input(ModItems.AJILENAKH)

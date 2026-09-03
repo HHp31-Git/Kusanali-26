@@ -1,12 +1,14 @@
 package com.kusanali;
 
-import com.kusanali.entity.other.SeedEffectTracker;
+import com.kusanali.entity.ModEntities;
+import com.kusanali.entity.tracker.SeedEffectTracker;
 import com.kusanali.event.element_adhering.*;
 import com.kusanali.event.element_enchant.ElementBowEnchantEvent;
 import com.kusanali.event.element_enchant.ElementEnchantEvent;
 import com.kusanali.event.element_enchant.EnchantBowSetting;
 import com.kusanali.event.element_reaction.*;
 import com.kusanali.event.element_enchant.EnchantWeaponSetting;
+import com.kusanali.event.entity.ShroomboarSpawn;
 import com.kusanali.event.item_getter.EmeraldGetter;
 import com.kusanali.event.reaction_status.SuperconductivityEvent;
 import com.kusanali.event.special_item.*;
@@ -40,6 +42,7 @@ public class Kusanali implements ModInitializer {
         ModLootTable.register();
         ModTrades.register();
         ModEnchants.register();
+        ModEntities.register();
         //特殊物品行为类
         FloatDream.registerAttackEvent();
         CorollaEvent.register();
@@ -82,6 +85,8 @@ public class Kusanali implements ModInitializer {
         //世界生成类
         ModWorldGeneration.register();
         AjiLeavesDrop.register();
+        //生物行为类
+        ShroomboarSpawn.register();
         //物品类
         EmeraldGetter.register();
         //HUD类
