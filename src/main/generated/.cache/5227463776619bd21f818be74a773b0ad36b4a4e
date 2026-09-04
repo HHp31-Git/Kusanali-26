@@ -1,4 +1,4 @@
-// 1.20.1	2026-09-04T13:03:38.7342433	Kusanali/Recipes
+// 1.20.1	2026-09-04T14:09:21.3706277	Kusanali/Recipes
 01335022f0fa35fde9b98cb358d854b74506874c data\kusanali\advancements\recipes\misc\float_dream.json
 83d9b1a90b41f01042d739687401fa9ecd45e8fc data\kusanali\recipes\troupe_sword.json
 7da95afafbcde6de285daf9d36444ea1dfcba262 data\kusanali\recipes\halvamaze.json
@@ -10,8 +10,8 @@ acef6f5270e3b9d19071f9911940be714962b71c data\kusanali\recipes\aji_planks_from_l
 1194728b034e30d1396fdf0d1c338930fae66911 data\kusanali\advancements\recipes\combat\sapwood_blade.json
 7de2982544de56d329fb99e9dcbc24db2230e462 data\kusanali\advancements\recipes\combat\forest_regalia.json
 8a16539848e53b25add23589ea9ab4a2f139a725 data\kusanali\recipes\forest_regalia.json
-2fd08a52fbb362a3b6b55cdcfdc543766e04f5ef data\kusanali\recipes\emerald_chunk.json
 7b013a2af3450c464130e2d504031f6b03ad209e data\kusanali\advancements\recipes\misc\aji_wood.json
+2fd08a52fbb362a3b6b55cdcfdc543766e04f5ef data\kusanali\recipes\emerald_chunk.json
 fe6d80db45873bf24bfbb4561130640783999271 data\kusanali\recipes\emerald_gemstone.json
 99c84137d881823662189272ebc040720c0aa5c1 data\kusanali\recipes\emerald_fragment.json
 b1a458eb43618f726eb82188fca0e978384decdc data\kusanali\advancements\recipes\misc\ive_never_forgotten.json

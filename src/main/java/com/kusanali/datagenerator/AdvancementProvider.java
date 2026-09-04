@@ -183,5 +183,19 @@ public class AdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .criterion("got_eb", InventoryChangedCriterion.Conditions.items(ModItems.SAPWOOD_BLADE))
                 .build(consumer, Kusanali.MOD_ID + "/got_eb");
+        Advancement gotForestSwordAdvancement = Advancement.Builder.create().parent(gotEmeraldAdvancement)
+                .display(
+                        ModItems.FOREST_REGALIA,
+                        Text.literal("森林王器 "),
+                        Text.literal("从兰那罗的故事中得到的武器，具有大剑的形制，能够贯穿森林的敌人"),
+                        null,
+                        AdvancementFrame.TASK,
+                        true,
+                        true,
+                        false
+                )
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .criterion("got_fs", InventoryChangedCriterion.Conditions.items(ModItems.FOREST_REGALIA))
+                .build(consumer, Kusanali.MOD_ID + "/got_fs");
     }
 }

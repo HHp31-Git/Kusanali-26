@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:kusanali/got_e",
+  "criteria": {
+    "got_fs": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "kusanali:forest_regalia"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "text": "从兰那罗的故事中得到的武器，具有大剑的形制，能够贯穿森林的敌人"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "kusanali:forest_regalia",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": true,
+    "title": {
+      "text": "森林王器 "
+    }
+  },
+  "requirements": [
+    [
+      "got_fs"
+    ]
+  ],
+  "rewards": {
+    "experience": 200
+  },
+  "sends_telemetry_event": true
+}
