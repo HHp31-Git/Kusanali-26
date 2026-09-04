@@ -24,6 +24,7 @@ public class EngLangProvider extends FabricLanguageProvider {
         translationBuilder.add(ModItems.AJILENAKH, "ajilenakh nut");
         translationBuilder.add(ModItems.SAPWOOD_BLADE, "sapwood blade");
         translationBuilder.add(ModItems.FOREST_REGALIA, "forest regalia");
+        translationBuilder.add(ModItems.AKASA_CORE, "akasa core");
 
         translationBuilder.add(ModItems.ANEMO_ITEM, "anemo item");
         translationBuilder.add(ModItems.CYRO_ITEM, "cyro item");
@@ -50,6 +51,7 @@ public class EngLangProvider extends FabricLanguageProvider {
         translationBuilder.add(ModBlocks.POTTED_SUMIRU_ROSE, "potted sumiru rose");
         translationBuilder.add(ModBlocks.PADISARAH, "padisarah");
         translationBuilder.add(ModBlocks.POTTED_PADISARAH, "potted padisarah");
+        translationBuilder.add(ModBlocks.ALTAR_BRICK, "altar brick");
 
         translationBuilder.add("painting.kusanali.nhd_1.title", "2024Birthday Painting");
         translationBuilder.add("painting.kusanali.nhd_3.title", "2025Birthday Painting");

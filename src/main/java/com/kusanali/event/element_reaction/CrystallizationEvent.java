@@ -23,7 +23,7 @@ public class CrystallizationEvent {
     private static final Map<UUID, Map<StatusEffect, Boolean>> PREV = new WeakHashMap<>();
 
     /** 已触发实体 */
-    private static final Map<UUID, Boolean> REACTED = new WeakHashMap<>();
+    private static final Set<UUID> REACTED = Collections.newSetFromMap(new WeakHashMap<>());
 
     /** 记录实体上次触发的时间 */
     private static final Map<UUID, Long> LAST_CRYSTALLIZE_TIME = new WeakHashMap<>();
@@ -100,7 +100,7 @@ public class CrystallizationEvent {
                 }
 
                 // 5. 防止重复触发
-                if (REACTED.containsKey(uuid)) {
+                if (REACTED.contains(uuid)) {
                     updatePrev(uuid, entity);
                     continue;
                 }
@@ -145,7 +145,7 @@ public class CrystallizationEvent {
                 entity.damage(ModDamageTypes.reaction_type_3(world), 1.0f);
 
                 LAST_CRYSTALLIZE_TIME.put(uuid, now);
-                REACTED.put(uuid, true);
+                REACTED.add(uuid);
 
                 updatePrev(uuid, entity);
             }

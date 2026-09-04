@@ -24,7 +24,7 @@ public class DiffusionEvent {
     private static final Map<UUID, Map<StatusEffect, Boolean>> PREV = new WeakHashMap<>();
 
     /** 已触发实体 */
-    private static final Map<UUID, Boolean> REACTED = new WeakHashMap<>();
+    private static final Set<UUID> REACTED = Collections.newSetFromMap(new WeakHashMap<>());
 
     /** 记录实体上次触发扩散的时间 */
     private static final Map<UUID, Long> LAST_SWIRL_TIME = new WeakHashMap<>();
@@ -97,7 +97,7 @@ public class DiffusionEvent {
                     continue;
                 }
 
-                if (REACTED.containsKey(uuid)) {
+                if (REACTED.contains(uuid)) {
                     updatePrev(uuid, entity);
                     continue;
                 }
@@ -179,7 +179,7 @@ public class DiffusionEvent {
                 }
 
                 LAST_SWIRL_TIME.put(uuid, now);
-                REACTED.put(uuid, true);
+                REACTED.add(uuid);
 
                 updatePrev(uuid, entity);
             }

@@ -9,7 +9,6 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.SlimeEntity;
-import net.minecraft.util.math.random.Random;
 
 public class SlimeRandomEvent {
 
@@ -42,31 +41,29 @@ public class SlimeRandomEvent {
                 // 已初始化则跳过
                 if (slime.getDataTracker().get(ELEMENT_INITIALIZED)) continue;
 
-                // 检查是否已经拥有任何元素效果
-                boolean hasElement = false;
-                for (StatusEffect effect : ELEMENTS) {
-                    if (slime.hasStatusEffect(effect)) {
-                        hasElement = true;
-                        break;
+                // 使用位掩码快速检查元素效果
+                int effectMask = 0;
+                for (int i = 0; i < ELEMENTS.length; i++) {
+                    if (slime.hasStatusEffect(ELEMENTS[i])) {
+                        effectMask |= (1 << i);
                     }
                 }
 
                 // 如果没有元素效果，则添加
-                if (!hasElement) {
+                if (effectMask == 0) {
+                    // 使用预计算的随机表
                     int seed = entity.getUuid().hashCode();
-                    Random random = Random.create(seed);
-                    StatusEffect effect = ELEMENTS[random.nextInt(ELEMENTS.length)];
+                    int index = (seed & 0x7FFFFFFF) % ELEMENTS.length;
+                    StatusEffect effect = ELEMENTS[index];
 
-                    slime.addStatusEffect(
-                            new StatusEffectInstance(
-                                    effect,
-                                    -1, // 无限时长
-                                    0,
-                                    false,
-                                    true,
-                                    true
-                            )
-                    );
+                    slime.addStatusEffect(new StatusEffectInstance(
+                            effect,
+                            -1, // 无限时长
+                            0,
+                            false,
+                            true,
+                            true
+                    ));
                 }
 
                 // 标记已初始化，不再重复处理

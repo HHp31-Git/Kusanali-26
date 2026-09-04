@@ -28,7 +28,7 @@ public class MeltEvent {
     private static final Map<UUID, Map<StatusEffect, Boolean>> PREV = new WeakHashMap<>();
 
     /** 已触发反应的实体 */
-    private static final Map<UUID, Boolean> REACTED = new WeakHashMap<>();
+    private static final Set<UUID> REACTED = Collections.newSetFromMap(new WeakHashMap<>());
 
     /** 防重入标记 */
     private static final Set<UUID> REENTERING = Collections.newSetFromMap(new WeakHashMap<>());
@@ -39,24 +39,15 @@ public class MeltEvent {
 
     public static void register() {
         ServerTickEvents.END_WORLD_TICK.register(world -> {
-
             long now = world.getTime();
 
-            /* ========== 更新获得时间 ========== */
             for (var ent : world.iterateEntities()) {
                 if (!(ent instanceof LivingEntity entity)) continue;
                 UUID uuid = entity.getUuid();
 
                 track(uuid, ModEffects.PYRO, entity, now);
                 track(uuid, ModEffects.CYRO, entity, now);
-            }
 
-            /* ========== 结算反应 ========== */
-            for (var ent : world.iterateEntities()) {
-                if (!(ent instanceof LivingEntity entity)) continue;
-                UUID uuid = entity.getUuid();
-
-                // 冷却检查
                 long lastReaction = LAST_REACTION_TIME.getOrDefault(uuid, 0L);
                 if (now - lastReaction < REACTION_COOLDOWN) {
                     updatePrev(uuid, entity);
@@ -72,7 +63,7 @@ public class MeltEvent {
                     continue;
                 }
 
-                if (REACTED.containsKey(uuid)) {
+                if (REACTED.contains(uuid)) {
                     updatePrev(uuid, entity);
                     continue;
                 }
@@ -86,65 +77,54 @@ public class MeltEvent {
                 boolean pyroInfinite = pyro.getDuration() == -1;
                 boolean cyroInfinite = cyro.getDuration() == -1;
 
-                /* ===== 两者都无限 ===== */
                 if (pyroInfinite && cyroInfinite) {
                     applyMeltReaction(world, entity, 2.0f, true, true);
                     LAST_REACTION_TIME.put(uuid, now);
-                    REACTED.put(uuid, true);
+                    REACTED.add(uuid);
                     updatePrev(uuid, entity);
                     continue;
                 }
 
-                /* ===== 无限 vs 有限 ===== */
                 if (pyroInfinite) {
-                    // Pyro 无限，Cyro 有限 → 删除 Cyro
                     entity.removeStatusEffect(ModEffects.CYRO);
                     times.remove(ModEffects.CYRO);
                     PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.CYRO, false);
-
                     applyMeltReaction(world, entity, 2.0f, true, false);
                     LAST_REACTION_TIME.put(uuid, now);
-                    REACTED.put(uuid, true);
+                    REACTED.add(uuid);
                     updatePrev(uuid, entity);
                     continue;
                 }
 
                 if (cyroInfinite) {
-                    // Cyro 无限，Pyro 有限 → 删除 Pyro
                     entity.removeStatusEffect(ModEffects.PYRO);
                     times.remove(ModEffects.PYRO);
                     PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.PYRO, false);
-
                     applyMeltReaction(world, entity, 3.0f, false, true);
                     LAST_REACTION_TIME.put(uuid, now);
-                    REACTED.put(uuid, true);
+                    REACTED.add(uuid);
                     updatePrev(uuid, entity);
                     continue;
                 }
 
-                /* ===== 有限 vs 有限 ===== */
                 long pyroTime = times.getOrDefault(ModEffects.PYRO, 0L);
                 long cyroTime = times.getOrDefault(ModEffects.CYRO, 0L);
-
                 boolean keepCyro = (pyroTime == cyroTime) || (pyroTime > cyroTime);
                 StatusEffect earlierEffect = keepCyro ? ModEffects.CYRO : ModEffects.PYRO;
-
                 entity.removeStatusEffect(earlierEffect);
                 times.remove(earlierEffect);
                 PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(earlierEffect, false);
 
                 float damage = keepCyro ? 2.0f : 3.0f;
-                boolean keepPyro = !keepCyro;  // 如果 Pyro 后获得，保留 Pyro
-                // 如果 Cyro 后获得，保留 Cyro
-
+                boolean keepPyro = !keepCyro;
                 applyMeltReaction(world, entity, damage, keepPyro, keepCyro);
                 LAST_REACTION_TIME.put(uuid, now);
-                REACTED.put(uuid, true);
-
+                REACTED.add(uuid);
                 updatePrev(uuid, entity);
             }
         });
     }
+
 
     /**
      * 应用融化反应（伤害 + 粒子 + 音效）

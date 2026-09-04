@@ -26,7 +26,7 @@ public class EvaporationEvent {
     private static final Map<UUID, Map<StatusEffect, Boolean>> PREV = new WeakHashMap<>();
 
     /** 已触发反应的实体 */
-    private static final Map<UUID, Boolean> REACTED = new WeakHashMap<>();
+    private static final Set<UUID> REACTED = Collections.newSetFromMap(new WeakHashMap<>());
 
     /** 防重入标记 */
     private static final Set<UUID> REENTERING = Collections.newSetFromMap(new WeakHashMap<>());
@@ -61,7 +61,7 @@ public class EvaporationEvent {
                     continue;
                 }
 
-                if (REACTED.containsKey(uuid)) {
+                if (REACTED.contains(uuid)) {
                     updatePrev(uuid, entity);
                     continue;
                 }
@@ -79,7 +79,7 @@ public class EvaporationEvent {
                 if (pyroInfinite && cyroInfinite) {
                     applyMeltDamage(entity, world, 2.0f);
                     LAST_REACTION_TIME.put(uuid, now);
-                    REACTED.put(uuid, true);
+                    REACTED.add(uuid);
                     updatePrev(uuid, entity);
                     continue;
                 }
@@ -93,7 +93,7 @@ public class EvaporationEvent {
 
                     applyMeltDamage(entity, world, 2.0f);
                     LAST_REACTION_TIME.put(uuid, now);
-                    REACTED.put(uuid, true);
+                    REACTED.add(uuid);
                     updatePrev(uuid, entity);
                     continue;
                 }
@@ -106,7 +106,7 @@ public class EvaporationEvent {
 
                     applyMeltDamage(entity, world, 3.0f);
                     LAST_REACTION_TIME.put(uuid, now);
-                    REACTED.put(uuid, true);
+                    REACTED.add(uuid);
                     updatePrev(uuid, entity);
                     continue;
                 }
@@ -127,7 +127,7 @@ public class EvaporationEvent {
                 float damage = pyroLater ? 2.0f : 3.0f;
                 applyMeltDamage(entity, world, damage);
                 LAST_REACTION_TIME.put(uuid, now);
-                REACTED.put(uuid, true);
+                REACTED.add(uuid);
 
                 // 3. 更新 PREV
                 updatePrev(uuid, entity);

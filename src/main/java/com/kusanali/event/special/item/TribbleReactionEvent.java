@@ -1,4 +1,4 @@
-package com.kusanali.event.special_item;
+package com.kusanali.event.special.item;
 
 import com.kusanali.datagenerator.DamageTypeTagProvider;
 import com.kusanali.register.ModDamageTypes;

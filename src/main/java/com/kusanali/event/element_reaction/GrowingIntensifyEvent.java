@@ -10,10 +10,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.WeakHashMap;
+import java.util.*;
 
 public class GrowingIntensifyEvent {
     /** 冷却（18 tick = 0.9 秒） */
@@ -26,7 +23,7 @@ public class GrowingIntensifyEvent {
     private static final Map<UUID, Map<StatusEffect, Boolean>> PREV = new WeakHashMap<>();
 
     /** 已触发实体 */
-    private static final Map<UUID, Boolean> REACTED = new WeakHashMap<>();
+    private static final Set<UUID> REACTED = Collections.newSetFromMap(new WeakHashMap<>());
 
     /** 记录实体上次触发的时间 */
     private static final Map<UUID, Long> LAST_TIME = new WeakHashMap<>();
@@ -47,99 +44,62 @@ public class GrowingIntensifyEvent {
         ServerTickEvents.END_WORLD_TICK.register(world -> {
             long now = world.getTime();
 
-            /* ========== 第一阶段：更新获得时间 ========== */
             for (net.minecraft.entity.Entity ent : world.iterateEntities()) {
                 if (!(ent instanceof LivingEntity entity)) continue;
                 UUID uuid = entity.getUuid();
 
                 track(uuid, ModEffects.INTENSIFY, entity, now);
                 track(uuid, ModEffects.DENDRO, entity, now);
-            }
-            /* ========== 第二阶段：结算反应 ========== */
-            for (net.minecraft.entity.Entity ent : world.iterateEntities()) {
-                if (!(ent instanceof LivingEntity entity)) continue;
-                UUID uuid = entity.getUuid();
 
-                // 冷却检查
                 long lastTime = LAST_TIME.getOrDefault(uuid, 0L);
-                if (now - lastTime < COOLDOWN) {
-                    continue;
+                if (now - lastTime >= COOLDOWN) {
+                    StatusEffectInstance intensify = entity.getStatusEffect(ModEffects.INTENSIFY);
+                    StatusEffectInstance dendro = entity.getStatusEffect(ModEffects.DENDRO);
+
+                    if (dendro == null || intensify == null) {
+                        REACTED.remove(uuid);
+                    } else if (!REACTED.contains(uuid)) {
+                        Map<StatusEffect, Long> times = APPLY_TIME.get(uuid);
+                        if (times != null) {
+                            boolean dendroInfinite = dendro.getDuration() == -1;
+                            boolean intensifyInfinite = intensify.getDuration() == -1;
+
+                            if (dendroInfinite && intensifyInfinite) {
+                                applyReaction(entity, world);
+                                REACTED.add(uuid);
+                            } else if (dendroInfinite) {
+                                entity.removeStatusEffect(ModEffects.INTENSIFY);
+                                times.remove(ModEffects.INTENSIFY);
+                                PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.INTENSIFY, false);
+                                applyReaction(entity, world);
+                                REACTED.add(uuid);
+                            } else if (intensifyInfinite) {
+                                entity.removeStatusEffect(ModEffects.DENDRO);
+                                times.remove(ModEffects.DENDRO);
+                                PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.DENDRO, false);
+                                applyReaction(entity, world);
+                                REACTED.add(uuid);
+                            } else {
+                                entity.removeStatusEffect(ModEffects.INTENSIFY);
+                                times.remove(ModEffects.INTENSIFY);
+                                PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.INTENSIFY, false);
+                                entity.removeStatusEffect(ModEffects.DENDRO);
+                                times.remove(ModEffects.DENDRO);
+                                PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.DENDRO, false);
+                                applyReaction(entity, world);
+                                REACTED.add(uuid);
+                            }
+                        }
+                    }
                 }
 
-                StatusEffectInstance intensify = entity.getStatusEffect(ModEffects.INTENSIFY);
-                StatusEffectInstance dendro = entity.getStatusEffect(ModEffects.DENDRO);
-
-                if (dendro == null || intensify == null) {
-                    REACTED.remove(uuid);
-                    continue;
-                }
-
-                if (REACTED.containsKey(uuid)) continue;
-
-                Map<StatusEffect, Long> times = APPLY_TIME.get(uuid);
-                if (times == null) continue;
-
-                boolean dendroInfinite = dendro.getDuration() == -1;
-                boolean intensifyInfinite = intensify.getDuration() == -1;
-
-                /* ===== 处理效果清除 ===== */
-                // 两者都无限：保留两者，触发反应
-                if (dendroInfinite && intensifyInfinite) {
-                    applyReaction(entity, world);
-                    REACTED.put(uuid, true);
-                    continue;
-                }
-                // Dendro 无限，Intensify 有限：清除 Intensify
-                if (dendroInfinite) {
-                    entity.removeStatusEffect(ModEffects.INTENSIFY);
-                    times.remove(ModEffects.INTENSIFY);
-                    PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                            .put(ModEffects.INTENSIFY, false);
-
-                    applyReaction(entity, world);
-                    REACTED.put(uuid, true);
-                    continue;
-                }
-                // Intensify 无限，Dendro 有限：清除 Dendro
-                if (intensifyInfinite) {
-                    entity.removeStatusEffect(ModEffects.DENDRO);
-                    times.remove(ModEffects.DENDRO);
-                    PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                            .put(ModEffects.DENDRO, false);
-
-                    applyReaction(entity, world);
-                    REACTED.put(uuid, true);
-                    continue;
-                }
-                // 两者都有限：清除两者
-                entity.removeStatusEffect(ModEffects.INTENSIFY);
-                times.remove(ModEffects.INTENSIFY);
-                PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                        .put(ModEffects.INTENSIFY, false);
-
-                entity.removeStatusEffect(ModEffects.DENDRO);
-                times.remove(ModEffects.DENDRO);
-                PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                        .put(ModEffects.DENDRO, false);
-
-                applyReaction(entity, world);
-                REACTED.put(uuid, true);
-            }
-            /* ========== 第三阶段：更新 PREV ========== */
-            for (net.minecraft.entity.Entity ent : world.iterateEntities()) {
-                if (!(ent instanceof LivingEntity entity)) continue;
-                UUID uuid = entity.getUuid();
-
-                PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                        .put(ModEffects.ELECTRO,
-                                entity.getStatusEffect(ModEffects.DENDRO) != null);
-
-                PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                        .put(ModEffects.INTENSIFY,
-                                entity.getStatusEffect(ModEffects.INTENSIFY) != null);
+                // 修复：原代码错误地将 DENDRO 的状态写入了 ELECTRO 的键
+                PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.DENDRO, entity.getStatusEffect(ModEffects.DENDRO) != null);
+                PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.INTENSIFY, entity.getStatusEffect(ModEffects.INTENSIFY) != null);
             }
         });
     }
+
     private static void applyReaction(LivingEntity entity, ServerWorld world) {
         entity.damage(ModDamageTypes.reaction_type_4(world), 2.0f);
         // 粒子特效

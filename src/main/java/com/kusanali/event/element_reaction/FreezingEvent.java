@@ -7,12 +7,14 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+import java.util.Collections;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 public class FreezingEvent {
 
-    private static final WeakHashMap<ServerPlayerEntity, Boolean> PREV_TRY_JUMP =
-            new WeakHashMap<>();
+    private static final Set<ServerPlayerEntity> PREV_TRY_JUMP = Collections.newSetFromMap(new WeakHashMap<>());
+
 
     public static void register() {
 
@@ -47,13 +49,13 @@ public class FreezingEvent {
                         player.getVelocity().y > 0.1
                                 && !player.isOnGround();
 
-                boolean wasTrying = PREV_TRY_JUMP.getOrDefault(player, false);
+                boolean wasTrying = PREV_TRY_JUMP.contains(player);
 
                 if (tryingToJump && !wasTrying) {
                     reduceFreezing(player);
                 }
 
-                PREV_TRY_JUMP.put(player, tryingToJump);
+                PREV_TRY_JUMP.add(player);
             }
         });
     }

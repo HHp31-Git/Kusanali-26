@@ -2,48 +2,57 @@ package com.kusanali.event.element_adhering;
 
 import com.kusanali.register.ModEffects;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.entity.projectile.thrown.SnowballEntity;
+import net.minecraft.util.math.Box;
+
+import java.util.List;
 
 public class CyroSnowEvent {
-
-    /** 最小刷新间隔（40 tick = 2 秒），避免每 tick 刷新 */
-    private static final int MIN_REFRESH_INTERVAL = 60;
 
     public static void register() {
         ServerTickEvents.END_WORLD_TICK.register(world -> {
             world.getTime();
 
-            for (var entity : world.iterateEntities()) {
-                if (!(entity instanceof LivingEntity living)) continue;
+            if (world.getTime() % 2 != 0) return;
 
-                // 不在细雪中则跳过
-                if (!isInPowderSnow(living)) continue;
+            for (SnowballEntity entity : world.getEntitiesByClass(
+                    SnowballEntity.class,
+                    new Box(-50, -50, -50, 50, 50, 50),
+                    e -> true
+            )) {
 
-                // 已有 Cyro 且剩余时间充足，不刷新
-                StatusEffectInstance existing = living.getStatusEffect(ModEffects.CYRO);
-                if (existing != null && existing.getDuration() > MIN_REFRESH_INTERVAL) continue;
+                // 使用更精确的碰撞检测
+                Box box = entity.getBoundingBox().expand(0.2);
 
-                // 在细雪中：持续给予 10 秒 Cyro
-                living.addStatusEffect(new StatusEffectInstance(
-                        ModEffects.CYRO,
-                        200,
-                        0,
-                        false,
-                        true,
-                        true
-                ));
+                // 批量处理命中目标
+                List<LivingEntity> targets = world.getEntitiesByClass(
+                        LivingEntity.class,
+                        box,
+                        target -> target != entity.getOwner() && target.isAlive()
+                );
+
+                if (!targets.isEmpty()) {
+                    // 使用批处理添加效果
+                    targets.forEach(target -> {
+                        StatusEffectInstance existing = target.getStatusEffect(ModEffects.CYRO);
+                        if (existing == null || existing.getDuration() <= 195) {
+                            target.addStatusEffect(new StatusEffectInstance(
+                                    ModEffects.CYRO,
+                                    200,
+                                    0,
+                                    false,
+                                    true,
+                                    true
+                            ));
+                        }
+                    });
+
+                    entity.discard();
+                }
             }
         });
     }
 
-    /**
-     * 判断实体是否在细雪方块中
-     */
-    private static boolean isInPowderSnow(LivingEntity entity) {
-        BlockPos feetPos = entity.getBlockPos();
-        return entity.getWorld().getBlockState(feetPos).isOf(Blocks.POWDER_SNOW);
-    }
 }

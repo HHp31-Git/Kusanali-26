@@ -11,6 +11,10 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
 public class ModBlocks {
+    public static final Block ALTAR_BRICK =
+            //祭坛砖
+            register("altar_brick", new Block(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS)));
+
     public static final Block SUMIRU_ROSE =
             //须弥蔷薇
             register("sumiru_rose", new FlowerBlock(StatusEffects.LUCK, 10,
@@ -52,8 +56,9 @@ public class ModBlocks {
                     AbstractBlock.Settings.copy(Blocks.OAK_SAPLING)));
 
     private static <T extends Block> T register(String path, T block) {
-        Registry.register(Registries.BLOCK, Identifier.of("kusanali", path), block);
-        Registry.register(Registries.ITEM, Identifier.of("kusanali", path), new BlockItem(block, new Item.Settings()));
+        Identifier id = Identifier.of("kusanali", path);
+        Registry.register(Registries.BLOCK, id, block);
+        Registry.register(Registries.ITEM, id, new BlockItem(block, new Item.Settings()));
         return block;
     }
     public static void initialize() {

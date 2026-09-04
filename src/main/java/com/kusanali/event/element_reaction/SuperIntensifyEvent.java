@@ -10,10 +10,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.WeakHashMap;
+import java.util.*;
 
 public class SuperIntensifyEvent {
     /** 冷却（18 tick = 0.9 秒） */
@@ -26,7 +23,7 @@ public class SuperIntensifyEvent {
     private static final Map<UUID, Map<StatusEffect, Boolean>> PREV = new WeakHashMap<>();
 
     /** 已触发实体 */
-    private static final Map<UUID, Boolean> REACTED = new WeakHashMap<>();
+    private static final Set<UUID> REACTED = Collections.newSetFromMap(new WeakHashMap<>());
 
     /** 记录实体上次触发的时间 */
     private static final Map<UUID, Long> LAST_TIME = new WeakHashMap<>();
@@ -47,96 +44,62 @@ public class SuperIntensifyEvent {
         ServerTickEvents.END_WORLD_TICK.register(world -> {
             long now = world.getTime();
 
-            /* ========== 第一阶段：更新获得时间 ========== */
             for (net.minecraft.entity.Entity ent : world.iterateEntities()) {
                 if (!(ent instanceof LivingEntity entity)) continue;
                 UUID uuid = entity.getUuid();
 
+                // 1. 更新获得时间
                 track(uuid, ModEffects.INTENSIFY, entity, now);
                 track(uuid, ModEffects.ELECTRO, entity, now);
-            }
-            /* ========== 第二阶段：结算反应 ========== */
-            for (net.minecraft.entity.Entity ent : world.iterateEntities()) {
-                if (!(ent instanceof LivingEntity entity)) continue;
-                UUID uuid = entity.getUuid();
 
-                // 冷却检查
+                // 2. 结算反应
                 long lastTime = LAST_TIME.getOrDefault(uuid, 0L);
-                if (now - lastTime < COOLDOWN) {
-                    continue;
+                if (now - lastTime >= COOLDOWN) {
+                    StatusEffectInstance intensify = entity.getStatusEffect(ModEffects.INTENSIFY);
+                    StatusEffectInstance electro = entity.getStatusEffect(ModEffects.ELECTRO);
+
+                    if (electro == null || intensify == null) {
+                        REACTED.remove(uuid);
+                    } else if (!REACTED.contains(uuid)) {
+                        Map<StatusEffect, Long> times = APPLY_TIME.get(uuid);
+                        if (times != null) {
+                            boolean electroInfinite = electro.getDuration() == -1;
+                            boolean intensifyInfinite = intensify.getDuration() == -1;
+
+                            if (electroInfinite && intensifyInfinite) {
+                                applyReaction(entity, world);
+                                REACTED.add(uuid);
+                            } else if (electroInfinite) {
+                                entity.removeStatusEffect(ModEffects.INTENSIFY);
+                                times.remove(ModEffects.INTENSIFY);
+                                PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.INTENSIFY, false);
+                                applyReaction(entity, world);
+                                REACTED.add(uuid);
+                            } else if (intensifyInfinite) {
+                                entity.removeStatusEffect(ModEffects.ELECTRO);
+                                times.remove(ModEffects.ELECTRO);
+                                PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.ELECTRO, false);
+                                applyReaction(entity, world);
+                                REACTED.add(uuid);
+                            } else {
+                                entity.removeStatusEffect(ModEffects.INTENSIFY);
+                                times.remove(ModEffects.INTENSIFY);
+                                PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.INTENSIFY, false);
+                                entity.removeStatusEffect(ModEffects.ELECTRO);
+                                times.remove(ModEffects.ELECTRO);
+                                PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.ELECTRO, false);
+                                applyReaction(entity, world);
+                                REACTED.add(uuid);
+                            }
+                        }
+                    }
                 }
 
-                StatusEffectInstance intensify = entity.getStatusEffect(ModEffects.INTENSIFY);
-                StatusEffectInstance electro = entity.getStatusEffect(ModEffects.ELECTRO);
-
-                if (electro == null || intensify == null) {
-                    REACTED.remove(uuid);
-                    continue;
-                }
-
-                if (REACTED.containsKey(uuid)) continue;
-
-                Map<StatusEffect, Long> times = APPLY_TIME.get(uuid);
-                if (times == null) continue;
-
-                boolean electroInfinite = electro.getDuration() == -1;
-                boolean intensifyInfinite = intensify.getDuration() == -1;
-
-                /* ===== 处理效果清除 ===== */
-                // 两者都无限：保留两者，触发反应
-                if (electroInfinite && intensifyInfinite) {
-                    applyReaction(entity, world);
-                    REACTED.put(uuid, true);
-                    continue;
-                }
-                // Electro 无限，Intensify 有限：清除 Intensify
-                if (electroInfinite) {
-                    entity.removeStatusEffect(ModEffects.INTENSIFY);
-                    times.remove(ModEffects.INTENSIFY);
-                    PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                            .put(ModEffects.INTENSIFY, false);
-
-                    applyReaction(entity, world);
-                    REACTED.put(uuid, true);
-                    continue;
-                }
-                // Intensify 无限，Electro 有限：清除 Electro
-                if (intensifyInfinite) {
-                    entity.removeStatusEffect(ModEffects.ELECTRO);
-                    times.remove(ModEffects.ELECTRO);
-                    PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                            .put(ModEffects.ELECTRO, false);
-
-                    applyReaction(entity, world);
-                    REACTED.put(uuid, true);
-                    continue;
-                }
-                // 两者都有限：清除两者
-                entity.removeStatusEffect(ModEffects.INTENSIFY);
-                times.remove(ModEffects.INTENSIFY);
+                // 3. 更新 PREV
                 PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                        .put(ModEffects.INTENSIFY, false);
-
-                entity.removeStatusEffect(ModEffects.ELECTRO);
-                times.remove(ModEffects.ELECTRO);
+                        .put(ModEffects.ELECTRO, entity.getStatusEffect(ModEffects.ELECTRO) != null);
                 PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                        .put(ModEffects.ELECTRO, false);
-
-                applyReaction(entity, world);
-                REACTED.put(uuid, true);
-            }
-            /* ========== 第三阶段：更新 PREV ========== */
-            for (net.minecraft.entity.Entity ent : world.iterateEntities()) {
-                if (!(ent instanceof LivingEntity entity)) continue;
-                UUID uuid = entity.getUuid();
-
-                PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                        .put(ModEffects.ELECTRO,
-                                entity.getStatusEffect(ModEffects.ELECTRO) != null);
-
-                PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                        .put(ModEffects.INTENSIFY,
-                                entity.getStatusEffect(ModEffects.INTENSIFY) != null);
+                        .put(ModEffects.INTENSIFY, entity.getStatusEffect(ModEffects.INTENSIFY) != null);
             }
         });
     }

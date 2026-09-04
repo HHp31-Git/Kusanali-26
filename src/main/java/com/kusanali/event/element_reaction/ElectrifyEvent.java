@@ -28,8 +28,7 @@ public class ElectrifyEvent {
             new WeakHashMap<>();
 
     /** 已触发反应的实体 */
-    private static final Map<UUID, Boolean> REACTED =
-            new WeakHashMap<>();
+    private static final Set<UUID> REACTED = Collections.newSetFromMap(new WeakHashMap<>());
 
     /** Electrified 持续时间 */
     private static final int ELECTRIFIED_DURATION = 200;
@@ -51,106 +50,66 @@ public class ElectrifyEvent {
         ServerTickEvents.END_WORLD_TICK.register(world -> {
             long now = world.getTime();
 
-            /* ========== 更新获得时间 ========== */
             for (var ent : world.iterateEntities()) {
                 if (!(ent instanceof LivingEntity entity)) continue;
                 UUID uuid = entity.getUuid();
 
                 track(uuid, ModEffects.ELECTRO, entity, now);
                 track(uuid, ModEffects.HYDRO, entity, now);
-            }
 
-            /* ========== 结算反应 ========== */
-            for (var ent : world.iterateEntities()) {
-                if (!(ent instanceof LivingEntity entity)) continue;
-                UUID uuid = entity.getUuid();
-
-                // 冷却检查：每 0.7 秒最多触发一次
                 long lastSwirl = LAST_SWIRL_TIME.getOrDefault(uuid, 0L);
-                if (now - lastSwirl < SWIRL_COOLDOWN) {
-                    continue; // 冷却中，跳过
+                if (now - lastSwirl >= SWIRL_COOLDOWN) {
+                    if (entity.hasStatusEffect(ModEffects.ELECTRIFY)) {
+                        REACTED.remove(uuid);
+                    } else {
+                        StatusEffectInstance electro = entity.getStatusEffect(ModEffects.ELECTRO);
+                        StatusEffectInstance hydro = entity.getStatusEffect(ModEffects.HYDRO);
+
+                        if (electro == null || hydro == null) {
+                            REACTED.remove(uuid);
+                        } else if (!REACTED.contains(uuid)) {
+                            Map<StatusEffect, Long> times = APPLY_TIME.get(uuid);
+                            if (times != null) {
+                                boolean electroInfinite = electro.getDuration() == -1;
+                                boolean hydroInfinite = hydro.getDuration() == -1;
+
+                                if (electroInfinite && hydroInfinite) {
+                                    applyElectrifiedReaction(entity, world);
+                                    LAST_SWIRL_TIME.put(uuid, now);
+                                    REACTED.add(uuid);
+                                } else if (electroInfinite) {
+                                    entity.removeStatusEffect(ModEffects.HYDRO);
+                                    times.remove(ModEffects.HYDRO);
+                                    PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.HYDRO, false);
+                                    applyElectrifiedReaction(entity, world);
+                                    LAST_SWIRL_TIME.put(uuid, now);
+                                    REACTED.add(uuid);
+                                } else if (hydroInfinite) {
+                                    entity.removeStatusEffect(ModEffects.ELECTRO);
+                                    times.remove(ModEffects.ELECTRO);
+                                    PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.ELECTRO, false);
+                                    applyElectrifiedReaction(entity, world);
+                                    LAST_SWIRL_TIME.put(uuid, now);
+                                    REACTED.add(uuid);
+                                } else {
+                                    entity.removeStatusEffect(ModEffects.HYDRO);
+                                    times.remove(ModEffects.HYDRO);
+                                    PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.HYDRO, false);
+                                    applyElectrifiedReaction(entity, world);
+                                    LAST_SWIRL_TIME.put(uuid, now);
+                                    REACTED.add(uuid);
+                                }
+                            }
+                        }
+                    }
                 }
 
-                // 已有 Electrified 不触发
-                if (entity.hasStatusEffect(ModEffects.ELECTRIFY)) {
-                    REACTED.remove(uuid);
-                    continue;
-                }
-
-                StatusEffectInstance electro = entity.getStatusEffect(ModEffects.ELECTRO);
-                StatusEffectInstance hydro = entity.getStatusEffect(ModEffects.HYDRO);
-
-                if (electro == null || hydro == null) {
-                    REACTED.remove(uuid);
-                    continue;
-                }
-                if (REACTED.containsKey(uuid)) continue;
-
-                Map<StatusEffect, Long> times = APPLY_TIME.get(uuid);
-                if (times == null) continue;
-
-                boolean electroInfinite = electro.getDuration() == -1;
-                boolean hydroInfinite = hydro.getDuration() == -1;
-
-                /* ===== 两者都无限 ===== */
-                if (electroInfinite && hydroInfinite) {
-                    // 保留两者，触发反应
-                    applyElectrifiedReaction(entity, world);
-                    REACTED.put(uuid, true);
-                    continue;
-                }
-
-                /* ===== Electro 无限，Hydro 有限 ===== */
-                if (electroInfinite) {
-                    entity.removeStatusEffect(ModEffects.HYDRO);
-                    times.remove(ModEffects.HYDRO);
-                    PREV.getOrDefault(uuid, Collections.emptyMap())
-                            .put(ModEffects.HYDRO, false);
-
-                    applyElectrifiedReaction(entity, world);
-                    REACTED.put(uuid, true);
-                    continue;
-                }
-
-                /* ===== Hydro 无限，Electro 有限 ===== */
-                if (hydroInfinite) {
-                    // 清除 Electro，保留 Hydro
-                    entity.removeStatusEffect(ModEffects.ELECTRO);
-                    times.remove(ModEffects.ELECTRO);
-                    PREV.getOrDefault(uuid, Collections.emptyMap())
-                            .put(ModEffects.ELECTRO, false);
-
-                    applyElectrifiedReaction(entity, world);
-                    REACTED.put(uuid, true);
-                    continue;
-                }
-
-                /* ===== 两者都有限（Electro 优先，清除 Hydro） ===== */
-                entity.removeStatusEffect(ModEffects.HYDRO);
-                times.remove(ModEffects.HYDRO);
-                PREV.getOrDefault(uuid, Collections.emptyMap())
-                        .put(ModEffects.HYDRO, false);
-
-                applyElectrifiedReaction(entity, world);
-                LAST_SWIRL_TIME.put(uuid, now);
-                REACTED.put(uuid, true);
-            }
-
-            /* ========== 更新 PREV ========== */
-            for (var ent : world.iterateEntities()) {
-                if (!(ent instanceof LivingEntity entity)) continue;
-                UUID uuid = entity.getUuid();
-
-                PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                        .put(ModEffects.ELECTRO,
-                                entity.getStatusEffect(ModEffects.ELECTRO) != null);
-
-                PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                        .put(ModEffects.HYDRO,
-                                entity.getStatusEffect(ModEffects.HYDRO) != null);
+                PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.ELECTRO, entity.getStatusEffect(ModEffects.ELECTRO) != null);
+                PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.HYDRO, entity.getStatusEffect(ModEffects.HYDRO) != null);
             }
         });
     }
+
 
     private static void applyElectrifiedReaction(LivingEntity entity, ServerWorld world) {
         entity.addStatusEffect(

@@ -28,25 +28,24 @@ public class ElectroEvent {
                     entity.getZ() + 1.5
             );
 
-            // 获取范围内所有活着的生物（不包括自己）
-            for (LivingEntity target : serverWorld.getEntitiesByClass(
-                    LivingEntity.class,
-                    area,
-                    e -> e.isAlive() && e != entity
-            )) {
-                // 已有 Electro 且剩余时间充足，跳过
-                StatusEffectInstance existing = target.getStatusEffect(ModEffects.ELECTRO);
-                if (existing != null && existing.getDuration() > 160) continue;
-
-                target.addStatusEffect(new StatusEffectInstance(
-                        ModEffects.ELECTRO,
-                        200,
-                        0,
-                        false,
-                        true,
-                        true
-                ));
-            }
+// 使用批处理优化效果添加
+            serverWorld.getEntitiesByClass(
+                            LivingEntity.class,
+                            area,
+                            e -> e.isAlive() && e != entity
+                    ).stream()
+                    .filter(target -> {
+                        StatusEffectInstance existing = target.getStatusEffect(ModEffects.ELECTRO);
+                        return existing == null || existing.getDuration() <= 160;
+                    })
+                    .forEach(target -> target.addStatusEffect(new StatusEffectInstance(
+                            ModEffects.ELECTRO,
+                            200,
+                            0,
+                            false,
+                            true,
+                            true
+                    )));
 
             return true;
         });

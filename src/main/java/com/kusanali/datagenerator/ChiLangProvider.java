@@ -25,6 +25,7 @@ public class ChiLangProvider extends FabricLanguageProvider {
         translationBuilder.add(ModItems.TROUPE_SWORD, "旅团弯刀");
         translationBuilder.add(ModItems.SAPWOOD_BLADE, " 原木刀");
         translationBuilder.add(ModItems.FOREST_REGALIA, "森林王器");
+        translationBuilder.add(ModItems.AKASA_CORE, "虚空核心");
 
         translationBuilder.add(ModItems.ANEMO_ITEM, "风元素");
         translationBuilder.add(ModItems.CYRO_ITEM, "冰元素");
@@ -50,6 +51,7 @@ public class ChiLangProvider extends FabricLanguageProvider {
         translationBuilder.add(ModBlocks.POTTED_SUMIRU_ROSE, "须弥蔷薇盆栽");
         translationBuilder.add(ModBlocks.PADISARAH, "帕蒂沙兰");
         translationBuilder.add(ModBlocks.POTTED_PADISARAH, "帕蒂沙兰盆栽");
+        translationBuilder.add(ModBlocks.ALTAR_BRICK, "祭坛砖");
 
         translationBuilder.add("painting.kusanali.nhd_1.title", "2024贺图");
         translationBuilder.add("painting.kusanali.nhd_2.title", "2023贺图");

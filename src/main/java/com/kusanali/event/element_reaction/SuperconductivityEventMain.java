@@ -29,8 +29,7 @@ public class SuperconductivityEventMain {
             new WeakHashMap<>();
 
     /** 已触发反应的实体 */
-    private static final Map<UUID, Boolean> REACTED =
-            new WeakHashMap<>();
+    private static final Set<UUID> REACTED = Collections.newSetFromMap(new WeakHashMap<>());
 
     /** Superconductivity 持续时间 */
     private static final int SUPERCONDUCTIVITY_DURATION = 220;
@@ -40,115 +39,69 @@ public class SuperconductivityEventMain {
 
     public static void register() {
         ServerTickEvents.END_WORLD_TICK.register(world -> {
-            if (!(world instanceof ServerWorld)) return;
-
             long now = world.getTime();
 
-            /* ========== 更新获得时间 ========== */
             for (var ent : world.iterateEntities()) {
                 if (!(ent instanceof LivingEntity entity)) continue;
                 UUID uuid = entity.getUuid();
 
                 track(uuid, ModEffects.ELECTRO, entity, now);
                 track(uuid, ModEffects.CYRO, entity, now);
-            }
 
-            /* ========== 结算反应 ========== */
-            for (var ent : world.iterateEntities()) {
-                if (!(ent instanceof LivingEntity entity)) continue;
-                UUID uuid = entity.getUuid();
-
-                // 冷却检查
                 long lastSwirl = LAST_SWIRL_TIME.getOrDefault(uuid, 0L);
-                if (now - lastSwirl < SWIRL_COOLDOWN) {
-                    continue; // 冷却中，跳过
+                if (now - lastSwirl >= SWIRL_COOLDOWN) {
+                    if (entity.hasStatusEffect(ModEffects.SUPERCONDUCTIVITY)) {
+                        REACTED.remove(uuid);
+                    } else {
+                        StatusEffectInstance electro = entity.getStatusEffect(ModEffects.ELECTRO);
+                        StatusEffectInstance cyro = entity.getStatusEffect(ModEffects.CYRO);
+
+                        if (electro == null || cyro == null) {
+                            REACTED.remove(uuid);
+                        } else if (!REACTED.contains(uuid)) {
+                            Map<StatusEffect, Long> times = APPLY_TIME.get(uuid);
+                            if (times != null) {
+                                boolean electroInfinite = electro.getDuration() == -1;
+                                boolean cyroInfinite = cyro.getDuration() == -1;
+
+                                if (electroInfinite && cyroInfinite) {
+                                    applySuperconductivityReaction(entity, world);
+                                    REACTED.add(uuid);
+                                } else if (electroInfinite) {
+                                    entity.removeStatusEffect(ModEffects.CYRO);
+                                    times.remove(ModEffects.CYRO);
+                                    PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.CYRO, false);
+                                    applySuperconductivityReaction(entity, world);
+                                    REACTED.add(uuid);
+                                } else if (cyroInfinite) {
+                                    entity.removeStatusEffect(ModEffects.ELECTRO);
+                                    times.remove(ModEffects.ELECTRO);
+                                    PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.ELECTRO, false);
+                                    applySuperconductivityReaction(entity, world);
+                                    REACTED.add(uuid);
+                                } else {
+                                    long electroTime = times.getOrDefault(ModEffects.ELECTRO, 0L);
+                                    long cyroTime = times.getOrDefault(ModEffects.CYRO, 0L);
+                                    boolean electroLater = (electroTime == cyroTime) || (electroTime > cyroTime);
+                                    StatusEffect earlierEffect = electroLater ? ModEffects.CYRO : ModEffects.ELECTRO;
+                                    entity.removeStatusEffect(earlierEffect);
+                                    times.remove(earlierEffect);
+                                    PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(earlierEffect, false);
+                                    applySuperconductivityReaction(entity, world);
+                                    LAST_SWIRL_TIME.put(uuid, now);
+                                    REACTED.add(uuid);
+                                }
+                            }
+                        }
+                    }
                 }
 
-                // 已有 Superconductivity 不触发
-                if (entity.hasStatusEffect(ModEffects.SUPERCONDUCTIVITY)) {
-                    REACTED.remove(uuid);
-                    continue;
-                }
-
-                StatusEffectInstance electro = entity.getStatusEffect(ModEffects.ELECTRO);
-                StatusEffectInstance cyro = entity.getStatusEffect(ModEffects.CYRO);
-
-                if (electro == null || cyro == null) {
-                    REACTED.remove(uuid);
-                    continue;
-                }
-
-                if (REACTED.containsKey(uuid)) continue;
-
-                Map<StatusEffect, Long> times = APPLY_TIME.get(uuid);
-                if (times == null) continue;
-
-                boolean electroInfinite = electro.getDuration() == -1;
-                boolean cyroInfinite = cyro.getDuration() == -1;
-
-                /* ===== 两者都无限 ===== */
-                if (electroInfinite && cyroInfinite) {
-                    applySuperconductivityReaction(entity, world);
-                    REACTED.put(uuid, true);
-                    continue;
-                }
-
-                /* ===== 无限处理 ===== */
-                if (electroInfinite) {
-                    entity.removeStatusEffect(ModEffects.CYRO);
-                    times.remove(ModEffects.CYRO);
-                    PREV.getOrDefault(uuid, Collections.emptyMap())
-                            .put(ModEffects.CYRO, false);
-
-                    applySuperconductivityReaction(entity, world);
-                    REACTED.put(uuid, true);
-                    continue;
-                }
-
-                if (cyroInfinite) {
-                    entity.removeStatusEffect(ModEffects.ELECTRO);
-                    times.remove(ModEffects.ELECTRO);
-                    PREV.getOrDefault(uuid, Collections.emptyMap())
-                            .put(ModEffects.ELECTRO, false);
-
-                    applySuperconductivityReaction(entity, world);
-                    REACTED.put(uuid, true);
-                    continue;
-                }
-
-                /* ===== 有限处理 ===== */
-                long electroTime = times.getOrDefault(ModEffects.ELECTRO, 0L);
-                long cyroTime = times.getOrDefault(ModEffects.CYRO, 0L);
-
-                // Electro 视为先获得
-                boolean electroLater = (electroTime == cyroTime) || (electroTime > cyroTime);
-                StatusEffect earlierEffect = electroLater ? ModEffects.CYRO : ModEffects.ELECTRO;
-
-                entity.removeStatusEffect(earlierEffect);
-                times.remove(earlierEffect);
-                PREV.getOrDefault(uuid, Collections.emptyMap())
-                        .put(earlierEffect, false);
-
-                applySuperconductivityReaction(entity, world);
-                LAST_SWIRL_TIME.put(uuid, now);
-                REACTED.put(uuid, true);
-            }
-
-            /* ========== 更新 PREV ========== */
-            for (var ent : world.iterateEntities()) {
-                if (!(ent instanceof LivingEntity entity)) continue;
-                UUID uuid = entity.getUuid();
-
-                PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                        .put(ModEffects.ELECTRO,
-                                entity.getStatusEffect(ModEffects.ELECTRO) != null);
-
-                PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                        .put(ModEffects.CYRO,
-                                entity.getStatusEffect(ModEffects.CYRO) != null);
+                PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.ELECTRO, entity.getStatusEffect(ModEffects.ELECTRO) != null);
+                PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.CYRO, entity.getStatusEffect(ModEffects.CYRO) != null);
             }
         });
     }
+
 
     /** 应用超导反应 */
     private static void applySuperconductivityReaction(LivingEntity entity, ServerWorld world) {

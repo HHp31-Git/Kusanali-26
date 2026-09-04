@@ -21,8 +21,8 @@ public class DendroBurnEvent {
             new WeakHashMap<>();
 
     /** 已触发实体 */
-    private static final Map<UUID, Boolean> REACTED =
-            new WeakHashMap<>();
+    private static final Set<UUID> REACTED = Collections.newSetFromMap(new WeakHashMap<>());
+
 
     /** 反应冷却时间 */
     private static final int REACTION_COOLDOWN = 46;
@@ -51,91 +51,57 @@ public class DendroBurnEvent {
 
     public static void register() {
         ServerTickEvents.END_WORLD_TICK.register(world -> {
-            if (!(world instanceof ServerWorld)) return;
             long now = world.getTime();
 
-            /* ========== 更新获得时间 ========== */
             for (var ent : world.iterateEntities()) {
                 if (!(ent instanceof LivingEntity entity)) continue;
                 UUID uuid = entity.getUuid();
 
                 track(uuid, ModEffects.DENDRO, entity, now);
                 track(uuid, ModEffects.PYRO, entity, now);
-            }
 
-            /* ========== 结算反应 ========== */
-            for (var ent : world.iterateEntities()) {
-                if (!(ent instanceof LivingEntity entity)) continue;
-                UUID uuid = entity.getUuid();
-
-                // 冷却检查：每 2.3 秒最多触发一次
                 long lastReaction = LAST_REACTION_TIME.getOrDefault(uuid, 0L);
-                if (now - lastReaction < REACTION_COOLDOWN) {
-                    continue;
+                if (now - lastReaction >= REACTION_COOLDOWN) {
+                    StatusEffectInstance dendro = entity.getStatusEffect(ModEffects.DENDRO);
+                    StatusEffectInstance pyro = entity.getStatusEffect(ModEffects.PYRO);
+
+                    if (dendro == null || pyro == null) {
+                        REACTED.remove(uuid);
+                    } else if (!REACTED.contains(uuid)) {
+                        Map<StatusEffect, Long> times = APPLY_TIME.get(uuid);
+                        if (times != null) {
+                            boolean dendroInfinite = dendro.getDuration() == -1;
+                            boolean pyroInfinite = pyro.getDuration() == -1;
+
+                            if (dendroInfinite && pyroInfinite) {
+                                applyReaction(entity, world);
+                                LAST_REACTION_TIME.put(uuid, now);
+                                REACTED.add(uuid);
+                            } else if (dendroInfinite) {
+                                entity.removeStatusEffect(ModEffects.PYRO);
+                                times.remove(ModEffects.PYRO);
+                                PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.PYRO, false);
+                                applyReaction(entity, world);
+                                LAST_REACTION_TIME.put(uuid, now);
+                                REACTED.add(uuid);
+                            } else {
+                                entity.removeStatusEffect(ModEffects.DENDRO);
+                                times.remove(ModEffects.DENDRO);
+                                PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.DENDRO, false);
+                                applyReaction(entity, world);
+                                LAST_REACTION_TIME.put(uuid, now);
+                                REACTED.add(uuid);
+                            }
+                        }
+                    }
                 }
 
-                StatusEffectInstance dendro = entity.getStatusEffect(ModEffects.DENDRO);
-                StatusEffectInstance cyro = entity.getStatusEffect(ModEffects.PYRO);
-
-                if (dendro == null || cyro == null) {
-                    REACTED.remove(uuid);
-                    continue;
-                }
-                if (REACTED.containsKey(uuid)) continue;
-
-                Map<StatusEffect, Long> times = APPLY_TIME.get(uuid);
-                if (times == null) continue;
-
-                boolean dendroInfinite = dendro.getDuration() == -1;
-                boolean cyroInfinite = cyro.getDuration() == -1;
-
-                /* ===== 两者都无限 ===== */
-                if (dendroInfinite && cyroInfinite) {
-                    applyReaction(entity, world);
-                    LAST_REACTION_TIME.put(uuid, now);
-                    REACTED.put(uuid, true);
-                    continue;
-                }
-
-                /* ===== 无限处理 ===== */
-                if (dendroInfinite) {
-                    entity.removeStatusEffect(ModEffects.PYRO);
-                    times.remove(ModEffects.PYRO);
-                    PREV.getOrDefault(uuid, Collections.emptyMap())
-                            .put(ModEffects.PYRO, false);
-
-                    applyReaction(entity, world);
-                    LAST_REACTION_TIME.put(uuid, now);
-                    REACTED.put(uuid, true);
-                    continue;
-                }
-
-                /* ===== 有限处理 ===== */
-                entity.removeStatusEffect(ModEffects.DENDRO);
-                times.remove(ModEffects.DENDRO);
-                PREV.getOrDefault(uuid, Collections.emptyMap())
-                        .put(ModEffects.DENDRO, false);
-
-                applyReaction(entity, world);
-                LAST_REACTION_TIME.put(uuid, now);
-                REACTED.put(uuid, true);
-            }
-
-            /* ========== 更新 PREV ========== */
-            for (var ent : world.iterateEntities()) {
-                if (!(ent instanceof LivingEntity entity)) continue;
-                UUID uuid = entity.getUuid();
-
-                PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                        .put(ModEffects.DENDRO,
-                                entity.getStatusEffect(ModEffects.DENDRO) != null);
-
-                PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                        .put(ModEffects.PYRO,
-                                entity.getStatusEffect(ModEffects.PYRO) != null);
+                PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.DENDRO, entity.getStatusEffect(ModEffects.DENDRO) != null);
+                PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.PYRO, entity.getStatusEffect(ModEffects.PYRO) != null);
             }
         });
     }
+
 
     /** 应用反应 */
     private static void applyReaction(LivingEntity entity, ServerWorld world) {
