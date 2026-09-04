@@ -41,20 +41,24 @@ public class ItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 
         getOrCreateTagBuilder(ItemTags.SWORDS)
                 .add(ModItems.TROUPE_SWORD)
+                .add(ModItems.FOREST_REGALIA)
                 .add(ModItems.SAPWOOD_BLADE);
 
         getOrCreateTagBuilder(ItemTags.PLANKS)
                 .add(ModBlocks.AJI_PLANKS.asItem());
+
         getOrCreateTagBuilder(ItemTags.LOGS)
                 .add(ModBlocks.AJI_LOG.asItem())
                 .add(ModBlocks.STRIPPED_AJI_LOG.asItem())
                 .add(ModBlocks.AJI_WOOD.asItem())
                 .add(ModBlocks.STRIPPED_AJI_WOOD.asItem());
+
         getOrCreateTagBuilder(ItemTags.LOGS_THAT_BURN)
                 .add(ModBlocks.AJI_LOG.asItem())
                 .add(ModBlocks.AJI_WOOD.asItem())
                 .add(ModBlocks.STRIPPED_AJI_LOG.asItem())
                 .add(ModBlocks.STRIPPED_AJI_WOOD.asItem());
+
         getOrCreateTagBuilder(ItemTags.SMALL_FLOWERS)
                 .add(ModBlocks.PADISARAH.asItem())
                 .add(ModBlocks.SUMIRU_ROSE.asItem());
@@ -67,6 +71,7 @@ public class ItemTagsProvider extends FabricTagProvider.ItemTagProvider {
                 .add(ModItems.HYDRO_ITEM)
                 .add(ModItems.PYRO_ITEM)
                 .add(ModItems.ANEMO_ITEM);
+
         getOrCreateTagBuilder(ELEMENT_ENCHANTABLE_WEAPON)
                 .add(Items.WOODEN_SWORD)
                 .add(Items.STONE_SWORD)
@@ -81,7 +86,9 @@ public class ItemTagsProvider extends FabricTagProvider.ItemTagProvider {
                 .add(Items.DIAMOND_AXE)
                 .add(Items.NETHERITE_AXE)
                 .add(ModItems.TROUPE_SWORD)
+                .add(ModItems.FOREST_REGALIA)
                 .add(ModItems.SAPWOOD_BLADE);
+
         getOrCreateTagBuilder(EMERALD_UPDATE)
                 .add(ModItems.EMERALD_GEMSTONE)
                 .add(ModItems.EMERALD_CHUCK)

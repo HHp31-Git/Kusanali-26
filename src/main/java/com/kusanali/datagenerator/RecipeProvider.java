@@ -130,6 +130,18 @@ public class RecipeProvider extends FabricRecipeProvider {
                 .criterion(FabricRecipeProvider.hasItem(ModItems.EMERALD_CHUCK),
                         FabricRecipeProvider.conditionsFromItem(ModItems.EMERALD_CHUCK))
                 .offerTo(consumer);
+        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, ModItems.FOREST_REGALIA)
+                .pattern(" ac").pattern(" ca").pattern("b  ")
+                .input('b', Items.STICK)
+                .criterion(FabricRecipeProvider.hasItem(Items.STICK),
+                        FabricRecipeProvider.conditionsFromItem(Items.STICK))
+                .input('c', ModItems.EMERALD_CHUCK)
+                .criterion(FabricRecipeProvider.hasItem(ModItems.EMERALD_CHUCK),
+                        FabricRecipeProvider.conditionsFromItem(ModItems.EMERALD_CHUCK))
+                .input('a', ModItems.EMERALD_SLIVER)
+                .criterion(FabricRecipeProvider.hasItem(ModItems.EMERALD_SLIVER),
+                        FabricRecipeProvider.conditionsFromItem(ModItems.EMERALD_SLIVER))
+                .offerTo(consumer);
 
         ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.AJI_SAPLING, 1)
                 .input(ModItems.AJILENAKH)

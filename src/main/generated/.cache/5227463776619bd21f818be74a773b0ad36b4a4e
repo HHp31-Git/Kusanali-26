@@ -1,13 +1,17 @@
-// 1.20.1	2026-09-02T18:53:02.3158121	Kusanali/Recipes
+// 1.20.1	2026-09-04T13:03:38.7342433	Kusanali/Recipes
 01335022f0fa35fde9b98cb358d854b74506874c data\kusanali\advancements\recipes\misc\float_dream.json
 83d9b1a90b41f01042d739687401fa9ecd45e8fc data\kusanali\recipes\troupe_sword.json
 7da95afafbcde6de285daf9d36444ea1dfcba262 data\kusanali\recipes\halvamaze.json
+2a7974864ccbd36ef55da581548b4e55e1a16091 data\kusanali\recipes\sapwood_blade.json
 f24d3d36da9ce810f59cee3a932a024bf0760547 data\kusanali\advancements\recipes\misc\corolla.json
 acef6f5270e3b9d19071f9911940be714962b71c data\kusanali\recipes\aji_planks_from_logs.json
 70490dc6ae5d30f83ab2fb60e2989a288b67804a data\kusanali\advancements\recipes\misc\emerald_gemstone.json
 3412c6c0cd6eeb14e5691ba194e87e69d554590c data\kusanali\recipes\float_dream.json
-7b013a2af3450c464130e2d504031f6b03ad209e data\kusanali\advancements\recipes\misc\aji_wood.json
+1194728b034e30d1396fdf0d1c338930fae66911 data\kusanali\advancements\recipes\combat\sapwood_blade.json
+7de2982544de56d329fb99e9dcbc24db2230e462 data\kusanali\advancements\recipes\combat\forest_regalia.json
+8a16539848e53b25add23589ea9ab4a2f139a725 data\kusanali\recipes\forest_regalia.json
 2fd08a52fbb362a3b6b55cdcfdc543766e04f5ef data\kusanali\recipes\emerald_chunk.json
+7b013a2af3450c464130e2d504031f6b03ad209e data\kusanali\advancements\recipes\misc\aji_wood.json
 fe6d80db45873bf24bfbb4561130640783999271 data\kusanali\recipes\emerald_gemstone.json
 99c84137d881823662189272ebc040720c0aa5c1 data\kusanali\recipes\emerald_fragment.json
 b1a458eb43618f726eb82188fca0e978384decdc data\kusanali\advancements\recipes\misc\ive_never_forgotten.json
@@ -16,8 +20,8 @@ c533beb9f0f37ce0e3d49ff5f37114032b97b252 data\kusanali\recipes\corolla.json
 5f1ceac2ab573f35744885ba756982271b716e0a data\kusanali\advancements\recipes\misc\aji_planks_from_logs.json
 213c928945eaf80fc3c9bcc0ea27f74896b61b5b data\kusanali\recipes\ive_never_forgotten.json
 5c473543c8d20c1deaa1b8fe9910c7b3c14231bf data\kusanali\recipes\stripped_aji_wood.json
-461a78e48778e19b31eeb105de34dab7009ef1cd data\kusanali\advancements\recipes\misc\candied_nut.json
 4ca709ba6fba894536b7026ee9db621e88894bfb data\kusanali\advancements\recipes\combat\troupe_sword.json
+461a78e48778e19b31eeb105de34dab7009ef1cd data\kusanali\advancements\recipes\misc\candied_nut.json
 d1517bc6aae4d98d373b5c22cfe6944d60841463 data\kusanali\advancements\recipes\misc\emerald_chunk.json
 b9eaee0c81f77f921aa57fda27e4001e011cb144 data\kusanali\advancements\recipes\misc\stripped_aji_wood.json
 3aa6ae73ccfa5bd744bc095eba817dddeed69f88 data\kusanali\recipes\candied_nut.json

@@ -1,0 +1,80 @@
+{
+  "parent": "minecraft:kusanali/root",
+  "criteria": {
+    "got_ec": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "kusanali:emerald_chunk"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "got_ef": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "kusanali:emerald_fragment"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "got_eg": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "kusanali:emerald_gemstone"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "got_es": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "kusanali:emerald_sliver"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "text": "『生命』一直都是目的，『智慧』才是手段"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "kusanali:emerald_gemstone"
+    },
+    "show_toast": true,
+    "title": {
+      "text": "生长碧翡"
+    }
+  },
+  "requirements": [
+    [
+      "got_eg",
+      "got_ef",
+      "got_ec",
+      "got_es"
+    ]
+  ],
+  "rewards": {
+    "experience": 200
+  },
+  "sends_telemetry_event": true
+}

@@ -10,6 +10,7 @@ import com.kusanali.event.element_reaction.*;
 import com.kusanali.event.element_enchant.EnchantWeaponSetting;
 import com.kusanali.event.entity.ShroomboarSpawn;
 import com.kusanali.event.item_getter.EmeraldGetter;
+import com.kusanali.event.item_getter.JungleAddition;
 import com.kusanali.event.reaction_status.SuperconductivityEvent;
 import com.kusanali.event.special_item.*;
 import com.kusanali.register.*;
@@ -89,6 +90,7 @@ public class Kusanali implements ModInitializer {
         ShroomboarSpawn.register();
         //物品类
         EmeraldGetter.register();
+        JungleAddition.register();
         //HUD类
         FloatDreamHander.register();
         ClientHander.register();

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "b": {
+      "item": "minecraft:stick"
+    },
+    "c": {
+      "item": "kusanali:emerald_chunk"
+    }
+  },
+  "pattern": [
+    " c ",
+    " c ",
+    " b "
+  ],
+  "result": {
+    "item": "kusanali:sapwood_blade"
+  },
+  "show_notification": true
+}

@@ -23,6 +23,7 @@ public class EngLangProvider extends FabricLanguageProvider {
         translationBuilder.add(ModItems.CLIENT, "Void Client");
         translationBuilder.add(ModItems.AJILENAKH, "ajilenakh nut");
         translationBuilder.add(ModItems.SAPWOOD_BLADE, "sapwood blade");
+        translationBuilder.add(ModItems.FOREST_REGALIA, "forest regalia");
 
         translationBuilder.add(ModItems.ANEMO_ITEM, "anemo item");
         translationBuilder.add(ModItems.CYRO_ITEM, "cyro item");

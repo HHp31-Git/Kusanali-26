@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:kusanali/got_e",
+  "criteria": {
+    "got_eb": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "kusanali:sapwood_blade"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "text": "从兰那罗的故事中得到的武器，具有刀的形制，能够贯穿森林的敌人"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "kusanali:sapwood_blade",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": true,
+    "title": {
+      "text": "原木刀"
+    }
+  },
+  "requirements": [
+    [
+      "got_eb"
+    ]
+  ],
+  "rewards": {
+    "experience": 200
+  },
+  "sends_telemetry_event": true
+}

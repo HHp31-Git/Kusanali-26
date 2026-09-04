@@ -18,6 +18,11 @@ public class ModItems {
             register("sapwood_blade", new SwordItem(ModToolMaterial.SUMIRU_CRAFT, 5, -2.0f,
                     new Item.Settings().maxCount(1).rarity(Rarity.RARE)));
 
+    public static final Item FOREST_REGALIA =
+            //森林王器
+            register("forest_regalia", new SwordItem(ModToolMaterial.SUMIRU_CRAFT, 8, -4.4f,
+                    new Item.Settings().maxCount(1).rarity(Rarity.RARE)));
+
     public static final Item TROUPE_SWORD =
             //镀金旅团-剑
             register("troupe_sword", new SwordItem(ModToolMaterial.TROUPE, 3, -2.2f,

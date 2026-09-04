@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    "kusanali:troupe_sword"
+    "kusanali:troupe_sword",
+    "kusanali:forest_regalia",
+    "kusanali:sapwood_blade"
   ]
 }

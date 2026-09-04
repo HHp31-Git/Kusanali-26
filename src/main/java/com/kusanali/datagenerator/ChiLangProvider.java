@@ -24,6 +24,7 @@ public class ChiLangProvider extends FabricLanguageProvider {
         translationBuilder.add(ModItems.AJILENAKH, "枣椰");
         translationBuilder.add(ModItems.TROUPE_SWORD, "旅团弯刀");
         translationBuilder.add(ModItems.SAPWOOD_BLADE, " 原木刀");
+        translationBuilder.add(ModItems.FOREST_REGALIA, "森林王器");
 
         translationBuilder.add(ModItems.ANEMO_ITEM, "风元素");
         translationBuilder.add(ModItems.CYRO_ITEM, "冰元素");
