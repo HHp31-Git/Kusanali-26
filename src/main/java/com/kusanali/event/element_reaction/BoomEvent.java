@@ -119,7 +119,7 @@ public class BoomEvent {
             spawnBloomParticles(world, entity);
 
         } finally {
-            world.getServer().execute(() -> REENTERING.remove(uuid));
+            REENTERING.remove(uuid);
         }
     }
 
@@ -138,19 +138,18 @@ public class BoomEvent {
 
         // 生成种子
         for (int i = 0; i < seedCount; i++) {
-            // 在半径为 1 的圆上随机角度
             double angle = world.random.nextDouble() * Math.PI * 2;
             double radius = world.random.nextDouble() * SPAWN_RADIUS;
 
             double spawnX = center.x + Math.cos(angle) * radius;
             double spawnZ = center.z + Math.sin(angle) * radius;
 
-            DendroSeedEntity seed = new DendroSeedEntity(
-                    ModEntities.DENDRO_SEED,
-                    world
-            );
-            seed.setPosition(spawnX, center.y, spawnZ);
-            world.spawnEntity(seed);
+            // 修复：使用 EntityType.create 代替直接 new
+            DendroSeedEntity seed = ModEntities.DENDRO_SEED.create(world);
+            if (seed != null) {
+                seed.setPosition(spawnX, center.y, spawnZ);
+                world.spawnEntity(seed);
+            }
         }
     }
 

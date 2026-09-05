@@ -1,5 +1,6 @@
 package com.kusanali.entity.custom;
 
+import com.kusanali.entity.ModEntities;
 import com.kusanali.entity.tracker.SeedEffectTracker;
 import com.kusanali.register.ModDamageTypes;
 import com.kusanali.register.ModEffects;
@@ -16,7 +17,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.UUID;
 
 public class DendroSeedEntity extends Entity {
 
@@ -44,34 +44,44 @@ public class DendroSeedEntity extends Entity {
     /** 弹射物纹理变体 */
     private String textureVariant = "default";
 
-    public DendroSeedEntity(EntityType<? extends Entity> entityType, World world) {
+    public DendroSeedEntity(EntityType<?> entityType, World world) {
         super(entityType, world);
-        this.noClip = true;
-        this.setInvulnerable(true);
     }
+
 
     @Override
     public void tick() {
         super.tick();
+        if (!this.getWorld().isClient()) {
+            // 锁定位置：原地不动
+            this.setVelocity(0, 0, 0);
+            this.prevX = this.getX();
+            this.prevY = this.getY();
+            this.prevZ = this.getZ();
 
-        // 锁定位置：原地不动
-        this.setVelocity(0, 0, 0);
-        this.prevX = this.getX();
-        this.prevY = this.getY();
-        this.prevZ = this.getZ();
+            // 更新效果跟踪器
+            if (this.getWorld() instanceof ServerWorld serverWorld) {
+                SeedEffectTracker.tickAll(serverWorld);
+            }
 
-        if (this.getWorld().isClient()) return;
-
-        // 更新效果跟踪器
-        if (this.getWorld() instanceof ServerWorld serverWorld) {
-            SeedEffectTracker.tickAll(serverWorld);
+            // 每 120 tick (6秒) 执行一次逻辑
+            long now = this.getWorld().getTime();
+            if (now - lastProjectileTime >= PROJECTILE_COOLDOWN) {
+                lastProjectileTime = now;
+                executeLogic();
+            }
         }
+    }
 
-        // 每 6 秒执行一次逻辑
-        long now = this.getWorld().getTime();
-        if (now - lastProjectileTime >= PROJECTILE_COOLDOWN) {
-            lastProjectileTime = now;
-            executeLogic();
+    private boolean shouldExplode() {
+        return SeedEffectTracker.hasEffect(this.getUuid(), ModEffects.PYRO);
+    }
+
+    private void explodeWithEffect(ServerWorld world) {
+        if (shouldExplode()) {
+            explodeWithEffect(world, ModEffects.PYRO, PYRO_DURATION, ParticleTypes.FLAME);
+        } else {
+            explodeWithEffect(world, ModEffects.DENDRO, DENDRO_DURATION, ParticleTypes.HAPPY_VILLAGER);
         }
     }
 
@@ -79,21 +89,13 @@ public class DendroSeedEntity extends Entity {
      * 核心逻辑：根据状态效果执行不同的行为
      */
     private void executeLogic() {
-        if (!(this.getWorld() instanceof ServerWorld serverWorld)) return;
-
-        UUID uuid = this.getUuid();
-        boolean hasElectro = SeedEffectTracker.hasEffect(uuid, ModEffects.ELECTRO);
-        boolean hasPyro = SeedEffectTracker.hasEffect(uuid, ModEffects.PYRO);
-
-        if (hasElectro) {
-            // 情况 2：带有 Electro → 消失并生成弹射物
-            spawnProjectileAndRemove(serverWorld);
-        } else if (hasPyro) {
-            // 情况 3：带有 Pyro → 爆炸并赋予 Pyro 效果
-            explodeWithEffect(serverWorld, ModEffects.PYRO, PYRO_DURATION, ParticleTypes.FLAME);
-        } else {
-            // 情况 1：无效果 → 爆炸并赋予 Dendro 效果
-            explodeWithEffect(serverWorld, ModEffects.DENDRO, DENDRO_DURATION, ParticleTypes.HAPPY_VILLAGER);
+        if (this.getWorld() instanceof ServerWorld serverWorld) {
+            if (shouldExplode()) {
+                explodeWithEffect(serverWorld);
+            } else {
+                spawnProjectileAndRemove(serverWorld);
+            }
+            this.discard();
         }
     }
 
@@ -145,13 +147,12 @@ public class DendroSeedEntity extends Entity {
      * 生成弹射物并消失
      */
     private void spawnProjectileAndRemove(ServerWorld world) {
-        SeedProjectileEntity projectile = new SeedProjectileEntity(
-                com.kusanali.entity.ModEntities.SEED_PROJECTILE,
-                this.getWorld()
-        );
-        projectile.setPosition(this.getX(), this.getY(), this.getZ());
-        projectile.setVelocity(0, 0.125, 0);
-        world.spawnEntity(projectile);
+        SeedProjectileEntity projectile = ModEntities.SEED_PROJECTILE.create(world);
+        if (projectile != null) {
+            projectile.setPosition(this.getX(), this.getY(), this.getZ());
+            projectile.setVelocity(0, 0.125, 0);
+            world.spawnEntity(projectile);
+        }
 
         // 消失粒子
         Vec3d pos = this.getPos();
@@ -201,13 +202,6 @@ public class DendroSeedEntity extends Entity {
 
         // 中心闪光
         world.spawnParticles(ParticleTypes.CRIT, center.x, center.y + 0.5, center.z, 8, 0.2, 0.2, 0.2, 0.1);
-    }
-
-    /**
-     * 外部调用：给种子添加效果
-     */
-    public void addSeedEffect(net.minecraft.entity.effect.StatusEffect effect, int durationTicks) {
-        SeedEffectTracker.addEffect(this.getUuid(), effect, durationTicks);
     }
 
     /* ======================== NBT 持久化 ======================== */
