@@ -33,12 +33,6 @@ public class BoomEvent {
     /** 防重入标记 */
     private static final Set<UUID> REENTERING = Collections.newSetFromMap(new WeakHashMap<>());
 
-    /** 生成种子概率：70% 生成 1 个，30% 生成 2 个 */
-    private static final double SINGLE_SEED_CHANCE = 0.7;
-
-    /** 种子生成半径 */
-    private static final double SPAWN_RADIUS = 1.0;
-
     public static void register() {
         ServerTickEvents.END_WORLD_TICK.register(world -> {
             long now = world.getTime();
@@ -131,25 +125,24 @@ public class BoomEvent {
         Vec3d center = entity.getPos();
 
         // 确定生成数量
-        int seedCount = 1;
-        if (world.random.nextDouble() >= SINGLE_SEED_CHANCE) {
-            seedCount = 2;
-        }
+        int seedCount = 1 + world.random.nextInt(2);
 
-        // 生成种子
         for (int i = 0; i < seedCount; i++) {
+            // 在半径为1.5的圆上随机角度
             double angle = world.random.nextDouble() * Math.PI * 2;
-            double radius = world.random.nextDouble() * SPAWN_RADIUS;
+            double radius = 0.5 + world.random.nextDouble();
 
             double spawnX = center.x + Math.cos(angle) * radius;
             double spawnZ = center.z + Math.sin(angle) * radius;
+            // Y轴高度调整为实体底部上方0.5格
+            double spawnY = center.y + 0.5;
 
-            // 修复：使用 EntityType.create 代替直接 new
-            DendroSeedEntity seed = ModEntities.DENDRO_SEED.create(world);
-            if (seed != null) {
-                seed.setPosition(spawnX, center.y, spawnZ);
-                world.spawnEntity(seed);
-            }
+            DendroSeedEntity seed = new DendroSeedEntity(
+                    ModEntities.DENDRO_SEED,
+                    world
+            );
+            seed.setPosition(spawnX, spawnY, spawnZ);
+            world.spawnEntity(seed);
         }
     }
 

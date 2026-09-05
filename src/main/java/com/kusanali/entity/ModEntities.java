@@ -17,7 +17,7 @@ public class ModEntities {
                     Registries.ENTITY_TYPE,
                     new Identifier("kusanali", "dendro_seed"),
                     FabricEntityTypeBuilder.create(SpawnGroup.MISC, DendroSeedEntity::new)
-                            .dimensions(EntityDimensions.fixed(0.75f, 0.875f))
+                            .dimensions(EntityDimensions.fixed(1.1f, 1.15f))
                             .trackRangeBlocks(64)
                             .trackedUpdateRate(1)
                             .build()

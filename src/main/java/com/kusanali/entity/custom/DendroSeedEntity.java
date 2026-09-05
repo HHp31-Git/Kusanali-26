@@ -73,6 +73,7 @@ public class DendroSeedEntity extends Entity {
         }
     }
 
+
     private boolean shouldExplode() {
         return SeedEffectTracker.hasEffect(this.getUuid(), ModEffects.PYRO);
     }
