@@ -19,9 +19,13 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public class DendroSeedEntity extends Entity {
+    // 最大寿命
+    private static final int MAX_LIFETIME = 80;
+    // 创建时间
+    private long creationTime;
 
-    /** 弹射物生成冷却（120 tick = 6 秒） */
-    private static final int PROJECTILE_COOLDOWN = 120;
+    /** 弹射物生成冷却 */
+    private static final int PROJECTILE_COOLDOWN = 60;
 
     /** 爆炸半径 */
     private static final double EXPLOSION_RADIUS = 5.0;
@@ -52,26 +56,32 @@ public class DendroSeedEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
-        if (!this.getWorld().isClient()) {
-            // 锁定位置：原地不动
-            this.setVelocity(0, 0, 0);
-            this.prevX = this.getX();
-            this.prevY = this.getY();
-            this.prevZ = this.getZ();
+        // 锁定位置：原地不动
+        this.setVelocity(0, 0, 0);
+        this.prevX = this.getX();
+        this.prevY = this.getY();
+        this.prevZ = this.getZ();
 
-            // 更新效果跟踪器
-            if (this.getWorld() instanceof ServerWorld serverWorld) {
-                SeedEffectTracker.tickAll(serverWorld);
-            }
+        if (this.getWorld().isClient()) return;
 
-            // 每 120 tick (6秒) 执行一次逻辑
-            long now = this.getWorld().getTime();
-            if (now - lastProjectileTime >= PROJECTILE_COOLDOWN) {
-                lastProjectileTime = now;
-                executeLogic();
-            }
+        ServerWorld serverWorld = (ServerWorld) this.getWorld();
+        SeedEffectTracker.tickAll(serverWorld);
+
+        // 检查寿命
+        long age = serverWorld.getTime() - creationTime;
+        if (age >= MAX_LIFETIME) {
+            // 到达寿命，触发爆炸
+            explodeWithEffect(serverWorld, ModEffects.DENDRO, DENDRO_DURATION, ParticleTypes.HAPPY_VILLAGER);
+            return;
+        }
+
+        // 每 6 秒执行一次逻辑
+        if (serverWorld.getTime() - lastProjectileTime >= PROJECTILE_COOLDOWN) {
+            lastProjectileTime = serverWorld.getTime();
+            executeLogic();
         }
     }
+
 
 
     private boolean shouldExplode() {
@@ -209,6 +219,7 @@ public class DendroSeedEntity extends Entity {
 
     @Override
     protected void initDataTracker() {
+        this.creationTime = this.getWorld().getTime();
     }
 
     @Override
