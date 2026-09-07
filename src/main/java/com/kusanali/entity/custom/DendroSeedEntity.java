@@ -4,21 +4,24 @@ import com.kusanali.entity.ModEntities;
 import com.kusanali.entity.tracker.SeedEffectTracker;
 import com.kusanali.register.ModDamageTypes;
 import com.kusanali.register.ModEffects;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Arm;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
 
-public class DendroSeedEntity extends Entity {
+public class DendroSeedEntity extends LivingEntity {
     // 最大寿命
     private static final int MAX_LIFETIME = 80;
     // 创建时间
@@ -48,8 +51,11 @@ public class DendroSeedEntity extends Entity {
     /** 弹射物纹理变体 */
     private String textureVariant = "default";
 
-    public DendroSeedEntity(EntityType<?> entityType, World world) {
+    public DendroSeedEntity(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
+        this.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING,
+                -1, 0, false, false, true));
+        this.setInvulnerable(true);
     }
 
 
@@ -58,6 +64,7 @@ public class DendroSeedEntity extends Entity {
         super.tick();
         // 锁定位置：原地不动
         this.setVelocity(0, 0, 0);
+        this.setNoGravity(true);
         this.prevX = this.getX();
         this.prevY = this.getY();
         this.prevZ = this.getZ();
@@ -82,6 +89,10 @@ public class DendroSeedEntity extends Entity {
         }
     }
 
+    @Override
+    public Arm getMainArm() {
+        return null;
+    }
 
 
     private boolean shouldExplode() {
@@ -219,11 +230,12 @@ public class DendroSeedEntity extends Entity {
 
     @Override
     protected void initDataTracker() {
+        super.initDataTracker();
         this.creationTime = this.getWorld().getTime();
     }
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
+    public void readCustomDataFromNbt(NbtCompound nbt) {
         if (nbt.contains("TextureVariant")) {
             this.textureVariant = nbt.getString("TextureVariant");
         }
@@ -231,9 +243,28 @@ public class DendroSeedEntity extends Entity {
             this.lastProjectileTime = nbt.getLong("LastProjectileTime");
         }
     }
+    @Override
+    public boolean isImmuneToExplosion() {
+        return true;
+    }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
+    public Iterable<ItemStack> getArmorItems() {
+        return null;
+    }
+
+    @Override
+    public ItemStack getEquippedStack(EquipmentSlot slot) {
+        return null;
+    }
+
+    @Override
+    public void equipStack(EquipmentSlot slot, ItemStack stack) {
+
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
         nbt.putString("TextureVariant", textureVariant);
         nbt.putLong("LastProjectileTime", lastProjectileTime);
     }

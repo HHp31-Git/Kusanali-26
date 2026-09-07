@@ -47,6 +47,7 @@ public class ModItemGroup {
                 entries.add(ModItems.GEO_ITEM);
                 entries.add(ModItems.HYDRO_ITEM);
                 entries.add(ModItems.PYRO_ITEM);
+                entries.add(ModBlocks.ALTAR_BRICK);
             })
             .build();
     public static void initialize() {
