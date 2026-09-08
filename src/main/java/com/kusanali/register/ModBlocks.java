@@ -1,5 +1,6 @@
 package com.kusanali.register;
 
+import com.kusanali.event.special.block.AlterBrick;
 import com.kusanali.world.feature.tree.AjiTreeGenerator;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
@@ -13,7 +14,18 @@ import net.minecraft.util.Identifier;
 public class ModBlocks {
     public static final Block ALTAR_BRICK =
             //祭坛砖
-            register("altar_brick", new Block(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS)));
+            register("altar_brick", new AlterBrick(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS)));
+    public static final Block MOSSY_ALTAR_BRICK =
+            //祭坛砖
+            register("mossy_altar_brick", new AlterBrick(FabricBlockSettings.copyOf(Blocks.MOSSY_STONE_BRICKS)));
+
+    public static final Block CRACK_ALTAR_BRICK =
+            //祭坛砖
+            register("crack_altar_brick", new AlterBrick(FabricBlockSettings.copyOf(Blocks.CRACKED_STONE_BRICKS)));
+
+    public static final Block CHISELED_ALTAR_BRICK =
+            //祭坛砖
+            register("chiseled_altar_brick", new AlterBrick(FabricBlockSettings.copyOf(Blocks.CHISELED_STONE_BRICKS)));
 
     public static final Block SUMIRU_ROSE =
             //须弥蔷薇

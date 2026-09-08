@@ -32,6 +32,9 @@ public class ModelProvider extends FabricModelProvider {
                 BlockStateModelGenerator.TintType.NOT_TINTED);
 
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.ALTAR_BRICK);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.MOSSY_ALTAR_BRICK);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.CRACK_ALTAR_BRICK);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.CHISELED_ALTAR_BRICK);
     }
 
     @Override

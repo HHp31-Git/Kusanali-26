@@ -52,6 +52,9 @@ public class EngLangProvider extends FabricLanguageProvider {
         translationBuilder.add(ModBlocks.PADISARAH, "padisarah");
         translationBuilder.add(ModBlocks.POTTED_PADISARAH, "potted padisarah");
         translationBuilder.add(ModBlocks.ALTAR_BRICK, "altar brick");
+        translationBuilder.add(ModBlocks.MOSSY_ALTAR_BRICK, "mossy altar brick");
+        translationBuilder.add(ModBlocks.CRACK_ALTAR_BRICK, "cracked altar brick");
+        translationBuilder.add(ModBlocks.CHISELED_ALTAR_BRICK, "chiseled altar stone");
 
         translationBuilder.add("painting.kusanali.nhd_1.title", "2024Birthday Painting");
         translationBuilder.add("painting.kusanali.nhd_3.title", "2025Birthday Painting");
