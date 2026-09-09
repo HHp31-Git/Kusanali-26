@@ -1,6 +1,8 @@
-package com.kusanali.entity.client;
+package com.kusanali.entity.client.renderer;
 
 import com.kusanali.Kusanali;
+import com.kusanali.entity.client.ModModelLayers;
+import com.kusanali.entity.client.model.SeedProjectileModel;
 import com.kusanali.entity.custom.SeedProjectileEntity;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;

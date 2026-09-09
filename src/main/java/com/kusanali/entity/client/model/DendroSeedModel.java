@@ -1,4 +1,4 @@
-package com.kusanali.entity.client;
+package com.kusanali.entity.client.model;
 
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
@@ -11,9 +11,9 @@ import net.minecraft.entity.Entity;
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
 
-public class DendroSeed extends EntityModel<Entity> {
+public class DendroSeedModel extends EntityModel<Entity> {
 	private final ModelPart bone;
-	public DendroSeed(ModelPart root) {
+	public DendroSeedModel(ModelPart root) {
         super(RenderLayer::getEntityCutoutNoCull);
 		this.bone = root.getChild("bone");
 	}

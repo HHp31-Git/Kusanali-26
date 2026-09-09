@@ -1,6 +1,8 @@
-package com.kusanali.entity.client;
+package com.kusanali.entity.client.renderer;
 
 import com.kusanali.Kusanali;
+import com.kusanali.entity.client.ModModelLayers;
+import com.kusanali.entity.client.model.DendroSeedModel;
 import com.kusanali.entity.custom.DendroSeedEntity;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -11,11 +13,11 @@ import net.minecraft.util.Identifier;
 
 public class DendroSeedRenderer extends EntityRenderer<DendroSeedEntity> {
     public static final Identifier SEED_TEXTURE = new Identifier(Kusanali.MOD_ID, "textures/entity/dendro_seed.png");
-    private final DendroSeed model;
+    private final DendroSeedModel model;
 
     public DendroSeedRenderer(EntityRendererFactory.Context context) {
         super(context);
-        this.model = new DendroSeed(context.getPart(ModModelLayers.DENDRO_SEED));
+        this.model = new DendroSeedModel(context.getPart(ModModelLayers.DENDRO_SEED));
         this.shadowRadius = 0.0f; // 无阴影
     }
 

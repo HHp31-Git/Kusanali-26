@@ -20,7 +20,7 @@ public abstract class TerritoryEntity extends PathAwareEntity {
     private BlockPos territoryCenter;
     private double maxDistanceFromCenter = 22.0;
     private float healRatePerSecond = 0.2f;
-    private boolean returningHome = false;
+    public boolean returningHome = false;
     private int ticksSinceReturned = 0;
 
     protected TerritoryEntity(EntityType<? extends PathAwareEntity> entityType, World world) {

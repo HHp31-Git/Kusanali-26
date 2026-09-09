@@ -1,4 +1,4 @@
-package com.kusanali.entity.client;
+package com.kusanali.entity.client.model;
 
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
