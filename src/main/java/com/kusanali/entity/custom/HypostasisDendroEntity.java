@@ -2,6 +2,7 @@ package com.kusanali.entity.custom;
 
 import com.kusanali.define.entity.TerritoryBossEntity;
 import com.kusanali.define.entity.TerritoryEntity;
+import com.kusanali.entity.ModEntities;
 import com.kusanali.entity.structure_control.HypostasisSpawnState;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
@@ -14,6 +15,8 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.structure.StructureStart;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -208,5 +211,55 @@ public class HypostasisDendroEntity extends TerritoryBossEntity implements GeoEn
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
+    }
+
+    @Override
+    public void onDeath(DamageSource damageSource) {
+        BlockPos center = getAltarCenterPos();
+
+        super.onDeath(damageSource);
+
+        if (!this.getWorld().isClient && center != null) {
+            scheduleRespawn(center);
+        }
+    }
+
+    private static boolean isStructureStillValid(ServerWorld world, BlockPos center) {
+        return !world.getBlockState(center).isAir();
+    }
+
+    private void scheduleRespawn(BlockPos center) {
+        ServerWorld serverWorld = (ServerWorld) this.getWorld();
+        if (serverWorld == null) return;
+
+        serverWorld.getServer().execute(() -> {
+            if (!serverWorld.getServer().isRunning()) return;
+
+            if (isStructureStillValid(serverWorld, center)) return;
+
+            HypostasisSpawnState state = HypostasisSpawnState.getServerState(serverWorld.getServer());
+            String structureId = "kusanali:altar@" + center.getX() + "_" + center.getY() + "_" + center.getZ();
+            state.clearSpawned(structureId);
+
+            BlockPos spawnPos = center.up();
+            HypostasisDendroEntity newBoss = new HypostasisDendroEntity(
+                    ModEntities.HYPOSTASIS_DENDRO, serverWorld
+            );
+            newBoss.refreshPositionAndAngles(
+                    spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5,
+                    this.getYaw(), this.getPitch()
+            );
+            newBoss.initialize(
+                    serverWorld, serverWorld.getLocalDifficulty(spawnPos),
+                    SpawnReason.EVENT, null, null
+            );
+            serverWorld.spawnEntityAndPassengers(newBoss);
+
+            serverWorld.playSound(
+                    null, spawnPos,
+                    SoundEvents.ENTITY_WITHER_SPAWN, SoundCategory.HOSTILE,
+                    1.0f, 1.0f
+            );
+        });
     }
 }

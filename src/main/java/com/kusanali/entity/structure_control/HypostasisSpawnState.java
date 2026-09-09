@@ -53,4 +53,9 @@ public class HypostasisSpawnState extends PersistentState {
                 KEY
         );
     }
+
+    public void clearSpawned(String structureId) {
+        spawnedStructures.remove(structureId);
+        markDirty();
+    }
 }
