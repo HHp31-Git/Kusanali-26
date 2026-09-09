@@ -149,11 +149,20 @@ public abstract class TerritoryBossEntity extends TerritoryEntity {
             this.setVelocity(0, this.getVelocity().y, 0);
         }
 
-        // 更新血条名称
+        // ===== 两行血条名称 =====
+        String name = this.getDisplayName().getString();
+        String hpInfo = String.format("%.0f/%.0f", this.getHealth(), this.getMaxHealth());
+
+        // 第一行：正常大小
+        Text firstLine = Text.literal(name);
+        // 第二行：0.7 倍大小
+        Text secondLine = Text.literal("§7" + hpInfo + "§r"); // §7 = 灰色，视觉上显得小一些
+        // 合并为两行
         this.bossBar.setName(
-                Text.literal(this.getDisplayName().getString())
-                        .append(" ")
-                        .append(String.format("%.0f/%.0f", this.getHealth(), this.getMaxHealth()))
+                Text.literal("")
+                        .append(firstLine)
+                        .append("\n")
+                        .append(secondLine)
         );
     }
 

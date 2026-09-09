@@ -15,6 +15,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureStart;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockBox;
@@ -96,6 +97,16 @@ public class HypostasisDendroEntity extends TerritoryBossEntity implements GeoEn
                 this.heal(this.getMaxHealth() * 0.20f);
             }
         }
+
+        Text firstLine = Text.literal("无相之草");
+        Text secondLine = Text.literal("§7" + "扎因" + "§r");
+
+        this.bossBar.setName(
+                Text.literal("")
+                        .append(firstLine)
+                        .append("\n")
+                        .append(secondLine)
+        );
     }
 
     @Override
