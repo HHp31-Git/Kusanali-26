@@ -1,5 +1,6 @@
 package com.kusanali.datagenerator;
 
+import com.kusanali.register.ModDamageTypes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.entity.damage.DamageType;
@@ -26,6 +27,35 @@ public class DamageTypeProvider extends FabricDynamicRegistryProvider {
                     0.0f
             ));
         }
+
+        entries.add(ModDamageTypes.ELEMENT_ANEMO, new DamageType(
+                "kusanali.element_anemo",
+                0.0f
+        ));
+        entries.add(ModDamageTypes.ELEMENT_HYDRO, new DamageType(
+                "kusanali.element_hydro",
+                0.0f
+        ));
+        entries.add(ModDamageTypes.ELEMENT_ELECTRO, new DamageType(
+                "kusanali.element_electro",
+                0.0f
+        ));
+        entries.add(ModDamageTypes.ELEMENT_GEO, new DamageType(
+                "kusanali.element_geo",
+                0.0f
+        ));
+        entries.add(ModDamageTypes.ELEMENT_DENDRO, new DamageType(
+                "kusanali.element_dendro",
+                0.0f
+        ));
+        entries.add(ModDamageTypes.ELEMENT_CYRO, new DamageType(
+                "kusanali.element_cyro",
+                0.0f
+        ));
+        entries.add(ModDamageTypes.ELEMENT_PYRO, new DamageType(
+                "kusanali.element_pyro",
+                0.0f
+        ));
     }
 
     @Override

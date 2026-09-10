@@ -131,7 +131,6 @@ public class MeltEvent {
      */
     private static void applyMeltReaction(ServerWorld world, LivingEntity entity,
                                           float damage, boolean keepPyro, boolean keepCyro) {
-        // 1. 造成伤害（防递归）
         if (!REENTERING.contains(entity.getUuid())) {
             REENTERING.add(entity.getUuid());
             try {
@@ -141,10 +140,7 @@ public class MeltEvent {
             }
         }
 
-        // 2. 生成粒子特效
         spawnMeltParticles(world, entity, keepPyro, keepCyro);
-
-        // 3. 播放音效
         playMeltSound(world, entity, damage);
     }
 
@@ -244,7 +240,6 @@ public class MeltEvent {
         double y = entity.getY() + entity.getHeight() * 0.5;
         double z = entity.getZ();
 
-        // 高伤害（3.0）= 强烈融化 → 播放火声
         if (damage >= 3.0f) {
             world.playSound(
                     null, x, y, z,
@@ -254,7 +249,6 @@ public class MeltEvent {
                     1.2f
             );
         } else {
-            // 低伤害 → 播放气泡声（融化冒泡）
             world.playSound(
                     null, x, y, z,
                     SoundEvents.BLOCK_LAVA_EXTINGUISH,

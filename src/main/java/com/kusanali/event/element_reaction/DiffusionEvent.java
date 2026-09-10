@@ -1,5 +1,6 @@
 package com.kusanali.event.element_reaction;
 
+import com.kusanali.register.ModDamageTypes;
 import com.kusanali.register.ModEffects;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.LivingEntity;
@@ -60,13 +61,13 @@ public class DiffusionEvent {
                 if (!(ent instanceof LivingEntity entity)) continue;
                 UUID uuid = entity.getUuid();
 
-                // 1. 更新获得时间
+                // 更新获得时间
                 track(uuid, ModEffects.ANEMO, entity, now);
                 for (StatusEffect element : SWIRLABLE_ELEMENTS) {
                     track(uuid, element, entity, now);
                 }
 
-                // 2. 结算反应
+                // 结算反应
                 long lastSwirl = LAST_SWIRL_TIME.getOrDefault(uuid, 0L);
                 if (now - lastSwirl < SWIRL_COOLDOWN) {
                     updatePrev(uuid, entity);
@@ -139,7 +140,7 @@ public class DiffusionEvent {
                 if (!REENTERING.contains(uuid)) {
                     REENTERING.add(uuid);
                     try {
-                        entity.damage(world.getDamageSources().magic(), 1.0f);
+                        entity.damage(ModDamageTypes.reaction_type_2(world), 1.0f);
                     } finally {
                         world.getServer().execute(() -> REENTERING.remove(uuid));
                     }

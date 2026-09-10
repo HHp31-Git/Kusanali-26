@@ -67,7 +67,6 @@ public class FreezingEvent {
         int currentDuration = freezing.getDuration();
 
         if (currentDuration <= 14) {
-            // 剩余时间不足 0.7 秒 → 直接清除
             player.removeStatusEffect(ModEffects.FREEZING);
         } else {
             int newDuration = currentDuration - 14;

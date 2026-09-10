@@ -1,5 +1,6 @@
 package com.kusanali.effect.status_element;
 
+import com.kusanali.register.ModDamageTypes;
 import com.kusanali.register.ModEffects;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
@@ -48,7 +49,7 @@ public class ElectrifyEffect extends StatusEffect {
                 REENTERING.add(uuid);
                 try {
                     float damage = 1.0f + amplifier;
-                    entity.damage(serverWorld.getDamageSources().magic(), damage);
+                    entity.damage(ModDamageTypes.electro(serverWorld), damage);
                 } finally {
                     serverWorld.getServer().execute(() -> REENTERING.remove(uuid));
                 }

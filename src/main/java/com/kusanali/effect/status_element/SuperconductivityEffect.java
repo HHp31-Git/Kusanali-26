@@ -62,7 +62,6 @@ public class SuperconductivityEffect extends StatusEffect {
                 float extraDamage = amount * VULNERABILITY_MULTIPLIER;
 
                 if (extraDamage > 0.1f) {
-                    // 使用 setHealth 避免递归
                     float newHealth = entity.getHealth() - extraDamage;
                     entity.setHealth(Math.max(newHealth, 0));
 
@@ -77,7 +76,7 @@ public class SuperconductivityEffect extends StatusEffect {
                     }
                 }
 
-                return true; // 允许原版伤害继续
+                return true;
 
             } finally {
                 Objects.requireNonNull(entity.getServer()).execute(() -> REENTERING.remove(uuid));

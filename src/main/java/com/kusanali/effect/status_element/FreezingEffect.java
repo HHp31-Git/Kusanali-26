@@ -20,8 +20,8 @@ public class FreezingEffect extends StatusEffect {
                         100,
                         9,
                         false,
-                        true,
-                        true
+                        false,
+                        false
                 )
         );
     }

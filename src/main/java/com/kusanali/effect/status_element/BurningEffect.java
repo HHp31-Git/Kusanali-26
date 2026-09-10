@@ -1,5 +1,6 @@
 package com.kusanali.effect.status_element;
 
+import com.kusanali.register.ModDamageTypes;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
@@ -47,11 +48,7 @@ public class BurningEffect extends StatusEffect {
             LAST_DAMAGE_TICK.put(uuid, currentTick);
 
             float damage = DAMAGE_PER_TICK * (1 + amplifier);
-            entity.setHealth(entity.getHealth() - damage);
-            if (entity.getHealth() <= 0) {
-                entity.setHealth(0);
-                entity.onDeath(serverWorld.getDamageSources().magic());
-            }
+            entity.damage(ModDamageTypes.pyro(serverWorld), damage);
         }
 
         spawnFlameParticles(entity, serverWorld);

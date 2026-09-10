@@ -106,7 +106,6 @@ public class OverloadEvent {
         });
     }
 
-    // 抽取反应应用逻辑为独立方法，避免代码冗余
     private static void applyOverloadReaction(LivingEntity entity, ServerWorld serverWorld, World world) {
         float damage = 2.5f;
         DamageSource src = ModDamageTypes.reaction_type_3(serverWorld);

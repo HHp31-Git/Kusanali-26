@@ -1,6 +1,7 @@
 package com.kusanali.datagenerator;
 
 import com.kusanali.Kusanali;
+import com.kusanali.entity.ModEntities;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.entity.EntityType;
@@ -26,6 +27,8 @@ public class EntityTypeTagsProvider extends FabricTagProvider.EntityTypeTagProvi
             TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(Kusanali.MOD_ID, "cyro_entity"));
     public static final TagKey<EntityType<?>> GEO_ENTITY =
             TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(Kusanali.MOD_ID, "geo_entity"));
+    public static final TagKey<EntityType<?>> DENDRO_ENTITY =
+            TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(Kusanali.MOD_ID, "dendro_entity"));
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
@@ -46,5 +49,8 @@ public class EntityTypeTagsProvider extends FabricTagProvider.EntityTypeTagProvi
                 .add(EntityType.SNOW_GOLEM)
                 .add(EntityType.IRON_GOLEM)
                 .add(EntityType.STRIDER);
+
+        getOrCreateTagBuilder(DENDRO_ENTITY)
+                .add(ModEntities.HYPOSTASIS_DENDRO);
     }
 }

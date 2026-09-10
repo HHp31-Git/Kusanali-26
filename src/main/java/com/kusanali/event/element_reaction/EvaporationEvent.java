@@ -143,7 +143,6 @@ public class EvaporationEvent {
 
         REENTERING.add(entity.getUuid());
         try {
-            // 使用 entity.damage() 替代 setHealth，触发完整伤害流程
             entity.damage(ModDamageTypes.reaction_type_2(world), damage);
 
             // 生成粒子特效

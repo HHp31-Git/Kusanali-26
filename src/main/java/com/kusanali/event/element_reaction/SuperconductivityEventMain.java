@@ -109,7 +109,7 @@ public class SuperconductivityEventMain {
         DamageSource src = ModDamageTypes.reaction_type_3(world);
         entity.damage(src, REACTION_DAMAGE);
 
-        // 给予 Superconductivity 效果
+        // 给予效果
         entity.addStatusEffect(new StatusEffectInstance(
                 ModEffects.SUPERCONDUCTIVITY,
                 SUPERCONDUCTIVITY_DURATION,

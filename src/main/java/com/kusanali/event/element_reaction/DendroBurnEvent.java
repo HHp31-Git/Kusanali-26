@@ -33,9 +33,6 @@ public class DendroBurnEvent {
     /** Burning 持续时间（3 秒 = 60 tick） */
     private static final int BURNING_DURATION = 60;
 
-    /** 反应伤害 */
-    private static final float REACTION_DAMAGE = 1.0f;
-
     private static void track(UUID uuid, StatusEffect effect,
                               LivingEntity entity, long now) {
         Map<StatusEffect, Boolean> prevMap = PREV.get(uuid);
@@ -105,7 +102,7 @@ public class DendroBurnEvent {
 
     /** 应用反应 */
     private static void applyReaction(LivingEntity entity, ServerWorld world) {
-        entity.damage(ModDamageTypes.reaction_type_3(world), REACTION_DAMAGE);
+        entity.damage(ModDamageTypes.reaction_type_3(world), 1.0f);
         entity.addStatusEffect(new StatusEffectInstance(
                 ModEffects.BURNING,
                 BURNING_DURATION,

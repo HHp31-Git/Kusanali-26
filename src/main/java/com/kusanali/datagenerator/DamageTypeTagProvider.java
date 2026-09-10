@@ -3,6 +3,7 @@ package com.kusanali.datagenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.entity.damage.DamageType;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.TagKey;
@@ -21,6 +22,8 @@ public class DamageTypeTagProvider extends FabricTagProvider<DamageType> {
             TagKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier("kusanali", "physical"));
     public static final TagKey<DamageType> REACTION =
             TagKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier("kusanali", "reaction"));
+    public static final TagKey<DamageType> ELEMENT =
+            TagKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier("kusanali", "element"));
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
@@ -36,6 +39,14 @@ public class DamageTypeTagProvider extends FabricTagProvider<DamageType> {
                 .addOptional(new Identifier("kusanali", "reaction_type_4"))
                 .addOptional(new Identifier("kusanali", "reaction_type_5"))
                 .addOptional(new Identifier("kusanali", "reaction_type_6"));
+        getOrCreateTagBuilder(ELEMENT)
+                .addOptional(new Identifier("kusanali", "element_anemo"))
+                .addOptional(new Identifier("kusanali", "element_cyro"))
+                .addOptional(new Identifier("kusanali", "element_dendro"))
+                .addOptional(new Identifier("kusanali", "element_electro"))
+                .addOptional(new Identifier("kusanali", "element_geo"))
+                .addOptional(new Identifier("kusanali", "element_pyro"))
+                .addOptional(new Identifier("kusanali", "element_hydro"));
     }
     @Override
     public String getName() {

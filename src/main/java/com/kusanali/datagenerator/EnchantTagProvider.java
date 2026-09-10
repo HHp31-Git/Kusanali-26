@@ -33,6 +33,7 @@ public class EnchantTagProvider extends FabricTagProvider<Enchantment> {
                 .add(ModEnchants.DENDRO_ENCHANT)
                 .add(ModEnchants.CYRO_ENCHANT)
                 .add(ModEnchants.ELECTRO_ENCHANT);
+
         getOrCreateTagBuilder(ELEMENT_BOW)
                 .add(ModEnchants.ANEMO_ENCHANT_BOW)
                 .add(ModEnchants.GEO_ENCHANT_BOW)

@@ -103,7 +103,7 @@ public class BoomEvent {
 
         REENTERING.add(uuid);
         try {
-            // 1. 造成伤害（类型为 reaction_type_2）
+            // 1. 造成伤害
             entity.damage(ModDamageTypes.reaction_type_2(world), 1.0f);
 
             // 2. 生成种子

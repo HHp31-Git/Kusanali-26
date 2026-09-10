@@ -163,7 +163,7 @@ public class CrystallizationEvent {
         entity.addStatusEffect(new StatusEffectInstance(
                 StatusEffects.ABSORPTION,
                 300,
-                shieldLevel,  // 等级决定心的颜色
+                shieldLevel,
                 false,
                 false,
                 true

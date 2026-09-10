@@ -3,11 +3,8 @@ package com.kusanali;
 import com.kusanali.entity.ModEntities;
 import com.kusanali.entity.tracker.SeedEffectTracker;
 import com.kusanali.event.element_adhering.*;
-import com.kusanali.event.element_enchant.ElementBowEnchantEvent;
-import com.kusanali.event.element_enchant.ElementEnchantEvent;
-import com.kusanali.event.element_enchant.EnchantBowSetting;
+import com.kusanali.event.element_enchant.*;
 import com.kusanali.event.element_reaction.*;
-import com.kusanali.event.element_enchant.EnchantWeaponSetting;
 import com.kusanali.event.entity.ShroomboarSpawn;
 import com.kusanali.event.item_getter.EmeraldGetter;
 import com.kusanali.event.item_getter.JungleAddition;
@@ -86,6 +83,7 @@ public class Kusanali implements ModInitializer {
         EnchantWeaponSetting.register();
         ElementBowEnchantEvent.onInitialize();
         EnchantBowSetting.register();
+        ElementConversion.registerAll();
         //世界生成类
         ModWorldGeneration.register();
         AjiLeavesDrop.register();
