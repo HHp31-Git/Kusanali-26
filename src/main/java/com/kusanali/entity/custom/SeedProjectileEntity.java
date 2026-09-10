@@ -2,6 +2,7 @@ package com.kusanali.entity.custom;
 
 import com.kusanali.register.ModDamageTypes;
 import com.kusanali.register.ModEffects;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -13,8 +14,10 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,6 +66,15 @@ public class SeedProjectileEntity extends ProjectileEntity {
     /** 防重入标记 */
     private boolean isProcessingHit = false;
 
+    private boolean hasInitialized = false;
+
+    public void initialize() {
+        this.startPos = this.getPos();
+        this.phase = Phase.RISING;
+        this.setVelocity(0, RISE_SPEED, 0);
+        this.hasInitialized = true;
+    }
+
     public SeedProjectileEntity(EntityType<? extends ProjectileEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -71,10 +83,12 @@ public class SeedProjectileEntity extends ProjectileEntity {
     public void tick() {
         super.tick();
         if (this.getWorld().isClient()) return;
-        if (startPos == null) {
+
+        if (!hasInitialized) {
             startPos = this.getPos();
             phase = Phase.RISING;
             this.setVelocity(0, RISE_SPEED, 0);
+            hasInitialized = true;
             return;
         }
 
@@ -93,7 +107,22 @@ public class SeedProjectileEntity extends ProjectileEntity {
      * 阶段一：垂直上升
      */
     private void tickRising() {
+        // 每次 tick 重新设置向上速度，确保持续上升
         this.setVelocity(0, RISE_SPEED, 0);
+
+        // 检测上方是否有障碍物（头顶一格是否有方块）
+        if (isObstructedAbove()) {
+            // 有障碍物，直接寻找目标或进入上升消失阶段
+            LivingEntity foundTarget = findNearestHostile();
+            if (foundTarget != null && !foundTarget.isRemoved() && foundTarget.isAlive()) {
+                this.target = foundTarget;
+                this.phase = Phase.HOMING;
+                this.arcProgress = 0;
+            } else {
+                this.phase = Phase.FLYING_UP;
+            }
+            return;
+        }
 
         // 检查是否达到目标高度
         if (this.getY() >= startPos.y + RISE_HEIGHT) {
@@ -106,6 +135,34 @@ public class SeedProjectileEntity extends ProjectileEntity {
                 this.phase = Phase.FLYING_UP;
             }
         }
+    }
+
+    /**
+     * 检测弹射物上方是否有障碍物
+     * 检查头顶 1-2 格范围内是否有碰撞箱完整的方块
+     */
+    private boolean isObstructedAbove() {
+        Vec3d pos = this.getPos();
+        World world = this.getWorld();
+
+        for (double offset = 0.5; offset <= 1.5; offset += 0.5) {
+            double checkY = pos.y + offset;
+            BlockPos blockPos = BlockPos.ofFloored(pos.x, checkY, pos.z);
+            BlockState blockState = world.getBlockState(blockPos);
+
+            // 跳过空气和液体
+            if (blockState.isAir() || !blockState.getFluidState().isEmpty()) {
+                continue;
+            }
+
+            // 有碰撞箱就算障碍物
+            VoxelShape collisionShape = blockState.getCollisionShape(world, blockPos);
+            if (!collisionShape.isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

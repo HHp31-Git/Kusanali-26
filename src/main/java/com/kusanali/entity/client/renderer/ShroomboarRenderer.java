@@ -15,6 +15,6 @@ public class ShroomboarRenderer extends MobEntityRenderer<ShroomboarEntity, PigE
 
     @Override
     public Identifier getTexture(ShroomboarEntity entity) {
-        return new Identifier("kusanali", "textures/entity/shroomboar.png");
+        return new Identifier("kusanali", "textures/entity/shroomboar/shroomboar.png");
     }
 }

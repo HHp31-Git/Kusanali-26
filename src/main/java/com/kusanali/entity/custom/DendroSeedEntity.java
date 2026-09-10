@@ -189,20 +189,10 @@ public class DendroSeedEntity extends LivingEntity {
     private void spawnProjectileAndRemove(ServerWorld world) {
         SeedProjectileEntity projectile = ModEntities.SEED_PROJECTILE.create(world);
         if (projectile != null) {
-            projectile.setPosition(this.getX(), this.getY(), this.getZ());
-            projectile.setVelocity(0, 0.125, 0);
+            projectile.setPosition(this.getX(), this.getY() + 0.5, this.getZ());
+            projectile.initialize();
             world.spawnEntity(projectile);
         }
-
-        // 消失粒子
-        Vec3d pos = this.getPos();
-        world.spawnParticles(
-                ParticleTypes.ELECTRIC_SPARK,
-                pos.x, pos.y + 0.5, pos.z,
-                10, 0.3, 0.3, 0.3, 0.1
-        );
-
-        SeedEffectTracker.removeSeed(this.getUuid());
         this.discard();
     }
 
