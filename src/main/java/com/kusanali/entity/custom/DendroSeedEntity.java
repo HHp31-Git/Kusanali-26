@@ -69,7 +69,10 @@ public class DendroSeedEntity extends LivingEntity {
     }
     @Override
     public boolean damage(DamageSource source, float amount) {
-        return !this.getWorld().isClient;
+        if (this.getWorld().isClient) return false;
+        this.timeUntilRegen = 10;
+
+        return true;
     }
 
     @Override
@@ -79,7 +82,10 @@ public class DendroSeedEntity extends LivingEntity {
 
     @Override
     public void setHealth(float health) {
-        super.setHealth(Float.MAX_VALUE);
+        super.setHealth(Math.min(health, this.getMaxHealth()));
+        if (health < this.getMaxHealth()) {
+            this.heal(Float.MAX_VALUE);
+        }
     }
 
     @Override

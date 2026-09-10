@@ -70,16 +70,13 @@ public class SeedProjectileEntity extends ProjectileEntity {
     @Override
     public void tick() {
         super.tick();
-
         if (this.getWorld().isClient()) return;
-
-        // 初始化起始位置
         if (startPos == null) {
             startPos = this.getPos();
+            phase = Phase.RISING;
+            this.setVelocity(0, RISE_SPEED, 0);
+            return;
         }
-
-        // 更新飞行距离
-        double distanceTraveled = startPos.distanceTo(this.getPos());
 
         switch (phase) {
             case RISING -> tickRising();
@@ -87,8 +84,7 @@ public class SeedProjectileEntity extends ProjectileEntity {
             case FLYING_UP -> tickFlyingUp();
         }
 
-        // 超出最大距离则消失
-        if (distanceTraveled > MAX_RANGE && !isProcessingHit) {
+        if (startPos.distanceTo(this.getPos()) > MAX_RANGE && !isProcessingHit) {
             this.discard();
         }
     }
@@ -97,21 +93,16 @@ public class SeedProjectileEntity extends ProjectileEntity {
      * 阶段一：垂直上升
      */
     private void tickRising() {
-        // 向上飞行
         this.setVelocity(0, RISE_SPEED, 0);
 
-        // 检查是否上升到目标高度
+        // 检查是否达到目标高度
         if (this.getY() >= startPos.y + RISE_HEIGHT) {
-            // 尝试寻找目标
             LivingEntity foundTarget = findNearestHostile();
-
             if (foundTarget != null && !foundTarget.isRemoved() && foundTarget.isAlive()) {
-                // 找到目标 → 进入追踪阶段
                 this.target = foundTarget;
                 this.phase = Phase.HOMING;
                 this.arcProgress = 0;
             } else {
-                // 没找到目标 → 继续上升 10 格后消失
                 this.phase = Phase.FLYING_UP;
             }
         }
@@ -151,8 +142,8 @@ public class SeedProjectileEntity extends ProjectileEntity {
         double startY = startPos.y + RISE_HEIGHT;
         double endY = targetPos.y;
         double totalVerticalDist = endY - startY;
-        // 抛物线公式：y = 4h*t*(1-t) + lerp(startY, endY, t)
-        double arc = 4 * 0.8 * t * (1 - t); // 0.8 是弧线高度系数
+
+        double arc = 4 * 0.8 * t * (1 - t);
         double verticalVelocity = (totalVerticalDist * 0.05) + (arc - getPreviousArc()) * 20;
 
         this.setVelocity(

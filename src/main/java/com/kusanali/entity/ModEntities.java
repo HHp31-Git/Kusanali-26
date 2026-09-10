@@ -32,7 +32,7 @@ public class ModEntities {
                     new Identifier("kusanali", "seed_projectile"),
                     FabricEntityTypeBuilder.create(
                                     SpawnGroup.MISC, SeedProjectileEntity::new)
-                            .dimensions(EntityDimensions.fixed(0.25f, 0.25f))
+                            .dimensions(EntityDimensions.fixed(1.1f, 1.15f))
                             .trackRangeBlocks(64)
                             .trackedUpdateRate(20)
                             .build()
