@@ -90,7 +90,6 @@ public class DendroSeedEntity extends LivingEntity {
             this.creationTime = this.getWorld().getTime();
             this.lastProjectileTime = this.creationTime;
         }
-        super.tick();
         // 锁定位置：原地不动
         this.setVelocity(0, 0, 0);
         this.setNoGravity(true);
@@ -106,12 +105,10 @@ public class DendroSeedEntity extends LivingEntity {
         // 检查寿命
         long age = serverWorld.getTime() - creationTime;
         if (age >= MAX_LIFETIME) {
-            // 到达寿命，触发爆炸
             explodeWithEffect(serverWorld, ModEffects.DENDRO, DENDRO_DURATION, ParticleTypes.HAPPY_VILLAGER);
             return;
         }
 
-        // 每 6 秒执行一次逻辑
         if (serverWorld.getTime() - lastProjectileTime >= PROJECTILE_COOLDOWN) {
             lastProjectileTime = serverWorld.getTime();
             executeLogic();
@@ -122,31 +119,17 @@ public class DendroSeedEntity extends LivingEntity {
     public Arm getMainArm() {
         return Arm.RIGHT;
     }
-
-    private boolean shouldExplode() {
-        return SeedEffectTracker.hasEffect(this.getUuid(), ModEffects.PYRO);
-    }
-
-    private void explodeWithEffect(ServerWorld world) {
-        if (shouldExplode()) {
-            explodeWithEffect(world, ModEffects.PYRO, PYRO_DURATION, ParticleTypes.FLAME);
-        } else {
-            explodeWithEffect(world, ModEffects.DENDRO, DENDRO_DURATION, ParticleTypes.HAPPY_VILLAGER);
-        }
-    }
-
     /**
      * 核心逻辑：根据状态效果执行不同的行为
      */
     private void executeLogic() {
-        if (this.getWorld() instanceof ServerWorld serverWorld) {
-            if (shouldExplode()) {
-                explodeWithEffect(serverWorld);
-            }
-            if (this.hasStatusEffect(ModEffects.ELECTRO)){
-                spawnProjectileAndRemove(serverWorld);
-            }
-            this.discard();
+        ServerWorld serverWorld = (ServerWorld) this.getWorld();
+        if (SeedEffectTracker.hasEffect(this.getUuid(), ModEffects.PYRO)) {
+            explodeWithEffect(serverWorld, ModEffects.PYRO, PYRO_DURATION, ParticleTypes.FLAME);
+            return;
+        }
+        if (this.hasStatusEffect(ModEffects.ELECTRO)) {
+            spawnProjectileAndRemove(serverWorld);
         }
     }
 
