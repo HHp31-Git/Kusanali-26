@@ -5,10 +5,12 @@ import com.kusanali.entity.custom.DendroSeedEntity;
 import com.kusanali.register.ModDamageTypes;
 import com.kusanali.register.ModEffects;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.*;
@@ -124,26 +126,53 @@ public class BoomEvent {
     private static void spawnSeeds(ServerWorld world, LivingEntity entity) {
         Vec3d center = entity.getPos();
 
-        // 确定生成数量
-        int seedCount = 1 + world.random.nextInt(2);
+        int seedCount = 1 + (world.random.nextFloat() < 0.3f ? 1 : 0);
 
-        for (int i = 0; i < seedCount; i++) {
-            // 在半径为1.5的圆上随机角度
+        int spawned = 0;
+        int maxAttempts = seedCount * 10;
+
+        for (int attempt = 0; spawned < seedCount && attempt < maxAttempts; attempt++) {
             double angle = world.random.nextDouble() * Math.PI * 2;
             double radius = 0.5 + world.random.nextDouble();
 
-            double spawnX = center.x + Math.cos(angle) * radius;
-            double spawnZ = center.z + Math.sin(angle) * radius;
-            // Y轴高度调整为实体底部上方0.5格
-            double spawnY = center.y + 0.5;
+            double candidateX = center.x + Math.cos(angle) * radius;
+            double candidateZ = center.z + Math.sin(angle) * radius;
 
-            DendroSeedEntity seed = new DendroSeedEntity(
-                    ModEntities.DENDRO_SEED,
-                    world
-            );
-            seed.setPosition(spawnX, spawnY, spawnZ);
+            double groundY = findGroundY(world, candidateX, center.y, candidateZ);
+            if (groundY == Double.NEGATIVE_INFINITY) continue;
+
+            double spawnY = groundY + 0.5;
+
+            BlockPos spawnPos = BlockPos.ofFloored(candidateX, spawnY, candidateZ);
+            if (!world.getBlockState(spawnPos).isAir()) continue;
+
+            BlockPos headPos = spawnPos.up();
+            if (!world.getBlockState(headPos).isAir()) continue;
+
+            DendroSeedEntity seed = new DendroSeedEntity(ModEntities.DENDRO_SEED, world);
+            seed.setPosition(candidateX, spawnY, candidateZ);
             world.spawnEntity(seed);
+            spawned++;
         }
+    }
+
+    /**
+     * 从指定 Y 高度向下扫描，找到第一个非空气方块的上表面
+     * @return 地面 Y 坐标，找不到返回 Double.NEGATIVE_INFINITY
+     */
+    private static double findGroundY(ServerWorld world, double x, double startY, double z) {
+        int startBlockY = (int) Math.floor(startY);
+
+        for (int dy = 0; dy >= -5; dy--) {
+            BlockPos pos = new BlockPos((int) Math.floor(x), startBlockY + dy, (int) Math.floor(z));
+            BlockState state = world.getBlockState(pos);
+
+            if (!state.isAir()) {
+                return pos.getY() + 1.0;
+            }
+        }
+
+        return Double.NEGATIVE_INFINITY;
     }
 
     /**
