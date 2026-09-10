@@ -2,6 +2,7 @@ package com.kusanali;
 
 import com.kusanali.entity.ModEntities;
 import com.kusanali.entity.tracker.SeedEffectTracker;
+import com.kusanali.event.damage.ModDamageImmunity;
 import com.kusanali.event.element_adhering.*;
 import com.kusanali.event.element_enchant.*;
 import com.kusanali.event.element_reaction.*;
@@ -89,6 +90,8 @@ public class Kusanali implements ModInitializer {
         AjiLeavesDrop.register();
         //生物行为类
         ShroomboarSpawn.register();
+        //伤害调用类
+        ModDamageImmunity.registerAll();
         //物品类
         EmeraldGetter.register();
         JungleAddition.register();

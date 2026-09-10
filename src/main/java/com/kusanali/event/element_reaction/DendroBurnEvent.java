@@ -1,12 +1,10 @@
 package com.kusanali.event.element_reaction;
 
-import com.kusanali.register.ModDamageTypes;
 import com.kusanali.register.ModEffects;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.server.world.ServerWorld;
 
 import java.util.*;
 
@@ -71,21 +69,21 @@ public class DendroBurnEvent {
                             boolean pyroInfinite = pyro.getDuration() == -1;
 
                             if (dendroInfinite && pyroInfinite) {
-                                applyReaction(entity, world);
+                                applyReaction(entity);
                                 LAST_REACTION_TIME.put(uuid, now);
                                 REACTED.add(uuid);
                             } else if (dendroInfinite) {
                                 entity.removeStatusEffect(ModEffects.PYRO);
                                 times.remove(ModEffects.PYRO);
                                 PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.PYRO, false);
-                                applyReaction(entity, world);
+                                applyReaction(entity);
                                 LAST_REACTION_TIME.put(uuid, now);
                                 REACTED.add(uuid);
                             } else {
                                 entity.removeStatusEffect(ModEffects.DENDRO);
                                 times.remove(ModEffects.DENDRO);
                                 PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.DENDRO, false);
-                                applyReaction(entity, world);
+                                applyReaction(entity);
                                 LAST_REACTION_TIME.put(uuid, now);
                                 REACTED.add(uuid);
                             }
@@ -101,8 +99,7 @@ public class DendroBurnEvent {
 
 
     /** 应用反应 */
-    private static void applyReaction(LivingEntity entity, ServerWorld world) {
-        entity.damage(ModDamageTypes.reaction_type_3(world), 1.0f);
+    private static void applyReaction(LivingEntity entity) {
         entity.addStatusEffect(new StatusEffectInstance(
                 ModEffects.BURNING,
                 BURNING_DURATION,

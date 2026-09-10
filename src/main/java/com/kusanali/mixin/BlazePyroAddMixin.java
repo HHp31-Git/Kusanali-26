@@ -27,10 +27,10 @@ public abstract class BlazePyroAddMixin {
         self.addStatusEffect(
                 new StatusEffectInstance(
                         ModEffects.PYRO,
-                        -1,   // 无限
+                        -1,
                         0,
-                        false, // 不显示粒子
-                        true,  // 显示图标
+                        false,
+                        true,
                         true
                 )
         );
