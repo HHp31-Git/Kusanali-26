@@ -7,6 +7,7 @@ import com.kusanali.entity.client.model.SeedProjectileModel;
 import com.kusanali.entity.client.renderer.DendroSeedRenderer;
 import com.kusanali.entity.client.renderer.HypostasisDendroRenderer;
 import com.kusanali.entity.client.renderer.SeedProjectileRenderer;
+import com.kusanali.entity.client.renderer.ShroomboarRenderer;
 import com.kusanali.register.ModBlocks;
 import com.kusanali.register.ModKeySet;
 import com.kusanali.server.ClientVisionOverlay;
@@ -53,6 +54,11 @@ public class KusanaliModClient implements ClientModInitializer {
                 ModEntities.SEED_PROJECTILE,
                 SeedProjectileRenderer::new
         );
+        EntityRendererRegistry.register(
+                ModEntities.SHROOMBOAR,
+                ShroomboarRenderer::new
+        );
+
         ClientVisionOverlay.register();
 
         EntityRendererRegistry.register(ModEntities.HYPOSTASIS_DENDRO, HypostasisDendroRenderer::new);
