@@ -7,6 +7,9 @@ import com.kusanali.register.ModEffects;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -45,8 +48,8 @@ public class DendroSeedEntity extends LivingEntity {
     /** Pyro 效果持续时间（10 秒 = 200 tick） */
     private static final int PYRO_DURATION = 200;
 
-    /** 记录上次生成弹射物的时间 */
-    private long lastProjectileTime = 0;
+    private boolean initialized = false;
+    private long lastProjectileTime = -1;
 
     /** 弹射物纹理变体 */
     private String textureVariant = "default";
@@ -57,10 +60,36 @@ public class DendroSeedEntity extends LivingEntity {
                 -1, 0, false, false, true));
         this.setInvulnerable(true);
     }
+    public static DefaultAttributeContainer.Builder createAttributes() {
+        return LivingEntity.createLivingAttributes()
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, Float.MAX_VALUE)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.0D)
+                .add(EntityAttributes.GENERIC_ARMOR, 0.0D)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.0D);
+    }
+    @Override
+    public boolean damage(DamageSource source, float amount) {
+        return !this.getWorld().isClient;
+    }
 
+    @Override
+    public void kill() {
+        this.setHealth(this.getMaxHealth());
+    }
+
+    @Override
+    public void setHealth(float health) {
+        super.setHealth(Float.MAX_VALUE);
+    }
 
     @Override
     public void tick() {
+        super.tick();
+        if (!initialized) {
+            initialized = true;
+            this.creationTime = this.getWorld().getTime();
+            this.lastProjectileTime = this.creationTime;
+        }
         super.tick();
         // 锁定位置：原地不动
         this.setVelocity(0, 0, 0);
@@ -91,9 +120,8 @@ public class DendroSeedEntity extends LivingEntity {
 
     @Override
     public Arm getMainArm() {
-        return null;
+        return Arm.RIGHT;
     }
-
 
     private boolean shouldExplode() {
         return SeedEffectTracker.hasEffect(this.getUuid(), ModEffects.PYRO);
@@ -114,7 +142,8 @@ public class DendroSeedEntity extends LivingEntity {
         if (this.getWorld() instanceof ServerWorld serverWorld) {
             if (shouldExplode()) {
                 explodeWithEffect(serverWorld);
-            } else {
+            }
+            if (this.hasStatusEffect(ModEffects.ELECTRO)){
                 spawnProjectileAndRemove(serverWorld);
             }
             this.discard();
@@ -122,7 +151,7 @@ public class DendroSeedEntity extends LivingEntity {
     }
 
     /**
-     * 爆炸并赋予效果（通用方法）
+     * 爆炸并赋予效果
      */
     private void explodeWithEffect(ServerWorld world, net.minecraft.entity.effect.StatusEffect effect,
                                    int duration, net.minecraft.particle.ParticleEffect particle) {
@@ -227,11 +256,9 @@ public class DendroSeedEntity extends LivingEntity {
     }
 
     /* ======================== NBT 持久化 ======================== */
-
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.creationTime = this.getWorld().getTime();
     }
 
     @Override
@@ -250,12 +277,12 @@ public class DendroSeedEntity extends LivingEntity {
 
     @Override
     public Iterable<ItemStack> getArmorItems() {
-        return null;
+        return List.of();
     }
 
     @Override
     public ItemStack getEquippedStack(EquipmentSlot slot) {
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @Override

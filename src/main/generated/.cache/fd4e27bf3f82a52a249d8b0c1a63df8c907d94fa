@@ -1,7 +1,14 @@
-// 1.20.1	2026-09-08T20:54:10.3589951	Kusanali/Damage Types
-6b670025a1c79534600e27d7ec663dbb09f6e272 data\kusanali\damage_type\reaction_type_6.json
+// 1.20.1	2026-09-10T14:36:10.9199901	Kusanali/Damage Types
 6b670025a1c79534600e27d7ec663dbb09f6e272 data\kusanali\damage_type\reaction_type_1.json
-6b670025a1c79534600e27d7ec663dbb09f6e272 data\kusanali\damage_type\reaction_type_3.json
 6b670025a1c79534600e27d7ec663dbb09f6e272 data\kusanali\damage_type\reaction_type_2.json
-6b670025a1c79534600e27d7ec663dbb09f6e272 data\kusanali\damage_type\reaction_type_5.json
 6b670025a1c79534600e27d7ec663dbb09f6e272 data\kusanali\damage_type\reaction_type_4.json
+979e55f7dd96e56ded356f387d5944835db726ea data\kusanali\damage_type\element_anemo.json
+1a7df036089d8221a51ce313cc7ef72984cdd7a9 data\kusanali\damage_type\element_hydro.json
+62164aafd6e94bc4e8e11e9430222b4d69a963a0 data\kusanali\damage_type\element_pyro.json
+c6eb4320f07fb7a7af256664f9fc48480196e4c2 data\kusanali\damage_type\element_dendro.json
+6b670025a1c79534600e27d7ec663dbb09f6e272 data\kusanali\damage_type\reaction_type_6.json
+6b670025a1c79534600e27d7ec663dbb09f6e272 data\kusanali\damage_type\reaction_type_3.json
+d0ef61b075bcfad334969937dc5845ec7af50283 data\kusanali\damage_type\element_geo.json
+69fb921be23a75781b4e46563cab279435cdf795 data\kusanali\damage_type\element_cyro.json
+dc24331a218d67ff68bae289ef5ba66d0f35fe52 data\kusanali\damage_type\element_electro.json
+6b670025a1c79534600e27d7ec663dbb09f6e272 data\kusanali\damage_type\reaction_type_5.json

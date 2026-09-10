@@ -1,0 +1,33 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "kusanali:element_anemo",
+      "required": false
+    },
+    {
+      "id": "kusanali:element_cyro",
+      "required": false
+    },
+    {
+      "id": "kusanali:element_dendro",
+      "required": false
+    },
+    {
+      "id": "kusanali:element_electro",
+      "required": false
+    },
+    {
+      "id": "kusanali:element_geo",
+      "required": false
+    },
+    {
+      "id": "kusanali:element_pyro",
+      "required": false
+    },
+    {
+      "id": "kusanali:element_hydro",
+      "required": false
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 package com.kusanali;
 
 import com.kusanali.entity.ModEntities;
+import com.kusanali.entity.custom.DendroSeedEntity;
+import com.kusanali.entity.original.ShroomboarEntity;
 import com.kusanali.entity.tracker.SeedEffectTracker;
 import com.kusanali.event.damage.ModDamageImmunity;
 import com.kusanali.event.element_adhering.*;
@@ -20,6 +22,7 @@ import com.kusanali.specialitem.combats.FloatDream;
 import com.kusanali.world.feature.ModWorldGeneration;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import org.slf4j.Logger;
@@ -90,6 +93,14 @@ public class Kusanali implements ModInitializer {
         AjiLeavesDrop.register();
         //生物行为类
         ShroomboarSpawn.register();
+        FabricDefaultAttributeRegistry.register(
+                ModEntities.SHROOMBOAR,
+                ShroomboarEntity.createShroomboarAttributes()
+        );
+        FabricDefaultAttributeRegistry.register(
+                ModEntities.DENDRO_SEED,
+                DendroSeedEntity.createAttributes()
+        );
         //伤害调用类
         ModDamageImmunity.registerAll();
         //物品类
