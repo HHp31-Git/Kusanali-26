@@ -4,8 +4,8 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.EquipmentSlot;
 
-public class Dendro_Bow extends Enchantment {
-    public Dendro_Bow() {
+public class CyroBow extends Enchantment {
+    public CyroBow() {
         super(Rarity.RARE, EnchantmentTarget.BOW, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
     }
     @Override

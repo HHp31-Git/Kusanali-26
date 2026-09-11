@@ -1,4 +1,4 @@
-package com.kusanali.event.element_reaction;
+package com.kusanali.event.reaction_status;
 
 import com.kusanali.datagenerator.DamageTypeTagProvider;
 import com.kusanali.register.ModEffects;

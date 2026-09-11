@@ -1,25 +1,14 @@
 package com.kusanali.event.element_adhering;
 
-import com.kusanali.register.ModEffects;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 
-import java.util.Set;
+import static com.kusanali.register.ModEffects.BASE_ELEMENTS;
 
 public class ElementEntityAttackEvent {
-
-    private static final Set<StatusEffect> TRANSFERABLE_ELEMENTS = Set.of(
-            ModEffects.GEO,
-            ModEffects.PYRO,
-            ModEffects.CYRO,
-            ModEffects.ELECTRO,
-            ModEffects.ANEMO,
-            ModEffects.HYDRO,
-            ModEffects.DENDRO
-    );
-
+    //元素生物攻击自带元素附着
     public static void register() {
         ServerLivingEntityEvents.ALLOW_DAMAGE.register((target, source, amount) -> {
             // 只处理服务端
@@ -31,7 +20,7 @@ public class ElementEntityAttackEvent {
             // 遍历攻击者身上的效果
             for (StatusEffectInstance effect : attacker.getStatusEffects()) {
                 StatusEffect type = effect.getEffectType();
-                if (!TRANSFERABLE_ELEMENTS.contains(type)) continue;
+                if (!BASE_ELEMENTS.contains(type)) continue;
 
                 // 只处理无限时长
                 if (effect.getDuration() != -1) continue;

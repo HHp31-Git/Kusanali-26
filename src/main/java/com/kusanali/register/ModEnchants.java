@@ -44,32 +44,32 @@ public class ModEnchants {
     public static final Enchantment ANEMO_ENCHANT_BOW = Registry.register(
             Registries.ENCHANTMENT,
             new Identifier(MOD_ID, "anemo_enchant_bow"),
-            new Anemo_Bow()
+            new AnemoBow()
     );
     public static final Enchantment GEO_ENCHANT_BOW = Registry.register(
             Registries.ENCHANTMENT,
             new Identifier(MOD_ID, "geo_enchant_bow"),
-            new Geo_Bow()
+            new GeoBow()
     );
     public static final Enchantment ELECTRO_ENCHANT_BOW = Registry.register(
             Registries.ENCHANTMENT,
             new Identifier(MOD_ID, "electro_enchant_bow"),
-            new Electro_Bow()
+            new ElectroBow()
     );
     public static final Enchantment DENDRO_ENCHANT_BOW = Registry.register(
             Registries.ENCHANTMENT,
             new Identifier(MOD_ID, "dendro_enchant_bow"),
-            new Dendro_Bow()
+            new DendroBow()
     );
     public static final Enchantment HYDRO_ENCHANT_BOW = Registry.register(
             Registries.ENCHANTMENT,
             new Identifier(MOD_ID, "hydro_enchant_bow"),
-            new Hydro_Bow()
+            new HydroBow()
     );
     public static final Enchantment CYRO_ENCHANT_BOW = Registry.register(
             Registries.ENCHANTMENT,
             new Identifier(MOD_ID, "cyro_enchant_bow"),
-            new Cyro_Bow()
+            new CyroBow()
     );
     public static void register() {}
 }

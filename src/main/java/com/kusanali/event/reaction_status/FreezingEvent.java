@@ -1,4 +1,4 @@
-package com.kusanali.event.element_reaction;
+package com.kusanali.event.reaction_status;
 
 import com.kusanali.register.ModEffects;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;

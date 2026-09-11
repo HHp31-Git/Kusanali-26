@@ -70,7 +70,7 @@ public class ItemTagsProvider extends FabricTagProvider.ItemTagProvider {
                 .add(ModItems.GEO_ITEM)
                 .add(ModItems.HYDRO_ITEM)
                 .add(ModItems.PYRO_ITEM)
-                .add(ModItems.ANEMO_ITEM);
+                .add(ModItems.DENDRO_ITEM);
 
         getOrCreateTagBuilder(ELEMENT_ENCHANTABLE_WEAPON)
                 .add(Items.WOODEN_SWORD)

@@ -1,6 +1,5 @@
 package com.kusanali.event.element_adhering;
 
-import com.kusanali.register.ModEffects;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.data.DataTracker;
@@ -10,17 +9,9 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.SlimeEntity;
 
-public class SlimeRandomEvent {
+import static com.kusanali.register.ModEffects.BASE_ELEMENTS_ARRAY;
 
-    private static final StatusEffect[] ELEMENTS = {
-            ModEffects.GEO,
-            ModEffects.PYRO,
-            ModEffects.CYRO,
-            ModEffects.ELECTRO,
-            ModEffects.ANEMO,
-            ModEffects.HYDRO,
-            ModEffects.DENDRO
-    };
+public class SlimeRandomEvent {
 
     /** DataTracker 标记，记录史莱姆是否已初始化元素 */
     private static final TrackedData<Boolean> ELEMENT_INITIALIZED =
@@ -43,8 +34,8 @@ public class SlimeRandomEvent {
 
                 // 使用位掩码快速检查元素效果
                 int effectMask = 0;
-                for (int i = 0; i < ELEMENTS.length; i++) {
-                    if (slime.hasStatusEffect(ELEMENTS[i])) {
+                for (int i = 0; i < BASE_ELEMENTS_ARRAY.length; i++) {
+                    if (slime.hasStatusEffect(BASE_ELEMENTS_ARRAY[i])) {
                         effectMask |= (1 << i);
                     }
                 }
@@ -53,8 +44,8 @@ public class SlimeRandomEvent {
                 if (effectMask == 0) {
                     // 使用预计算的随机表
                     int seed = entity.getUuid().hashCode();
-                    int index = (seed & 0x7FFFFFFF) % ELEMENTS.length;
-                    StatusEffect effect = ELEMENTS[index];
+                    int index = (seed & 0x7FFFFFFF) % BASE_ELEMENTS_ARRAY.length;
+                    StatusEffect effect = BASE_ELEMENTS_ARRAY[index];
 
                     slime.addStatusEffect(new StatusEffectInstance(
                             effect,

@@ -1,6 +1,5 @@
 package com.kusanali.mixin;
 
-import com.kusanali.register.ModEffects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
@@ -11,25 +10,14 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static com.kusanali.register.ModEffects.BASE_ELEMENTS_ARRAY;
+
 @Mixin(ProjectileEntity.class)
 public abstract class WitchAttackMixin {
-
-    @Unique
-    private static final StatusEffect[] ELEMENTS = {
-            ModEffects.GEO,
-            ModEffects.PYRO,
-            ModEffects.CYRO,
-            ModEffects.ELECTRO,
-            ModEffects.ANEMO,
-            ModEffects.HYDRO,
-            ModEffects.DENDRO
-    };
-
     @Inject(
             method = "onEntityHit",
             at = @At("HEAD")
@@ -60,7 +48,7 @@ public abstract class WitchAttackMixin {
         }
 
         Random random = self.getWorld().getRandom();
-        StatusEffect effect = ELEMENTS[random.nextInt(ELEMENTS.length)];
+        StatusEffect effect = BASE_ELEMENTS_ARRAY[random.nextInt(BASE_ELEMENTS_ARRAY.length)];
 
         target.addStatusEffect(
                 new StatusEffectInstance(

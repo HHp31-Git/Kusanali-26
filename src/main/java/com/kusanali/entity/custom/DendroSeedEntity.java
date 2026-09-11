@@ -26,7 +26,7 @@ import java.util.List;
 
 public class DendroSeedEntity extends LivingEntity {
     // 最大寿命
-    private static final int MAX_LIFETIME = 80;
+    private static final int MAX_LIFETIME = 120;
     // 创建时间
     private long creationTime;
 
@@ -125,16 +125,16 @@ public class DendroSeedEntity extends LivingEntity {
     public Arm getMainArm() {
         return Arm.RIGHT;
     }
-    /**
-     * 核心逻辑：根据状态效果执行不同的行为
-     */
+
     private void executeLogic() {
         ServerWorld serverWorld = (ServerWorld) this.getWorld();
+
         if (SeedEffectTracker.hasEffect(this.getUuid(), ModEffects.PYRO)) {
             explodeWithEffect(serverWorld, ModEffects.PYRO, PYRO_DURATION, ParticleTypes.FLAME);
             return;
         }
-        if (this.hasStatusEffect(ModEffects.ELECTRO)) {
+
+        if (SeedEffectTracker.hasEffect(this.getUuid(), ModEffects.ELECTRO)) {
             spawnProjectileAndRemove(serverWorld);
         }
     }
@@ -196,42 +196,32 @@ public class DendroSeedEntity extends LivingEntity {
         this.discard();
     }
 
-    /**
-     * 生成爆炸粒子特效
-     */
     private void spawnExplosionParticles(ServerWorld world, Vec3d center, net.minecraft.particle.ParticleEffect particle) {
-        // 径向粒子爆发
-        for (int i = 0; i < 30; i++) {
+        // 减少粒子数量，只保留视觉效果
+        for (int i = 0; i < 12; i++) { // 30 → 12
             double angle = world.random.nextDouble() * Math.PI * 2;
             double radius = world.random.nextDouble() * EXPLOSION_RADIUS;
             double height = (world.random.nextDouble() - 0.5) * EXPLOSION_RADIUS;
 
-            double px = center.x + Math.cos(angle) * radius;
-            double py = center.y + 0.5 + height;
-            double pz = center.z + Math.sin(angle) * radius;
-
-            world.spawnParticles(particle, px, py, pz, 1,
-                    Math.cos(angle) * 0.05,
-                    world.random.nextDouble() * 0.05,
-                    Math.sin(angle) * 0.05,
-                    0.05);
+            world.spawnParticles(particle,
+                    center.x + Math.cos(angle) * radius,
+                    center.y + 0.5 + height,
+                    center.z + Math.sin(angle) * radius,
+                    1, 0, 0, 0, 0.02);
         }
 
-        // 同心圆扩散环
-        for (int ring = 0; ring < 3; ring++) {
-            double ringRadius = 1.0 + ring * 1.5;
-            for (int i = 0; i < 12; i++) {
-                double angle = (Math.PI * 2 / 12) * i;
-                world.spawnParticles(ParticleTypes.CLOUD,
-                        center.x + Math.cos(angle) * ringRadius,
-                        center.y + 0.3,
-                        center.z + Math.sin(angle) * ringRadius,
-                        1, 0, 0.05, 0, 0.03);
-            }
+        // 简化同心圆：只保留一圈
+        for (int i = 0; i < 8; i++) { // 12 × 3 → 8
+            double angle = (Math.PI * 2 / 8) * i;
+            world.spawnParticles(ParticleTypes.CLOUD,
+                    center.x + Math.cos(angle) * 2.0,
+                    center.y + 0.3,
+                    center.z + Math.sin(angle) * 2.0,
+                    1, 0, 0.03, 0, 0.01);
         }
 
-        // 中心闪光
-        world.spawnParticles(ParticleTypes.CRIT, center.x, center.y + 0.5, center.z, 8, 0.2, 0.2, 0.2, 0.1);
+        // 中心闪光保留，减少数量
+        world.spawnParticles(ParticleTypes.CRIT, center.x, center.y + 0.5, center.z, 4, 0.2, 0.2, 0.2, 0.05);
     }
 
     /* ======================== NBT 持久化 ======================== */

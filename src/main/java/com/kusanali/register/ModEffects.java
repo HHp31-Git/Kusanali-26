@@ -8,6 +8,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
+import java.util.Set;
+
 public class ModEffects {
     public static final StatusEffect MAGIC_DAMAGE = new FloatDreamQEffect(); //心景幻成-附加伤害
     public static final StatusEffect TRIBBLE = new TribbleEffect(); //灭净三业
@@ -24,6 +26,10 @@ public class ModEffects {
     public static final StatusEffect ELECTRIFY = new ElectrifyEffect(); //感电
     public static final StatusEffect BURNING = new BurningEffect(); //燃烧
     public static final StatusEffect INTENSIFY = new IntensifyEffect(); //激化
+
+    public static final Set<StatusEffect> BASE_ELEMENTS = Set.of(GEO, PYRO, CYRO, ELECTRO, ANEMO, HYDRO, DENDRO);
+    public static final StatusEffect[] BASE_ELEMENTS_ARRAY = {GEO, PYRO, CYRO, ELECTRO, ANEMO, HYDRO, DENDRO};
+
 
     public static void register() {
         Registry.register(Registries.STATUS_EFFECT, new Identifier("kusanali", "magic_damage"), MAGIC_DAMAGE);

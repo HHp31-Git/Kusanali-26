@@ -1,277 +1,78 @@
 package com.kusanali.event.element_reaction;
 
+import com.kusanali.define.event.ElementReaction;
 import com.kusanali.entity.ModEntities;
 import com.kusanali.entity.custom.DendroSeedEntity;
 import com.kusanali.register.ModDamageTypes;
 import com.kusanali.register.ModEffects;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.*;
 
-public class BoomEvent {
-
-    /** 反应冷却时间（20 tick = 1 秒） */
-    private static final int REACTION_COOLDOWN = 12;
-
-    /** 记录实体上次触发反应的时间 */
-    private static final Map<UUID, Long> LAST_REACTION_TIME = new WeakHashMap<>();
-
-    /** 实体 -> 效果首次获得时间 */
-    private static final Map<UUID, Map<StatusEffect, Long>> APPLY_TIME = new WeakHashMap<>();
-
-    /** 上一 tick 是否拥有效果 */
-    private static final Map<UUID, Map<StatusEffect, Boolean>> PREV = new WeakHashMap<>();
-
-    /** 已触发反应的实体 */
-    private static final Set<UUID> REACTED = Collections.newSetFromMap(new WeakHashMap<>());
-
-    /** 防重入标记 */
-    private static final Set<UUID> REENTERING = Collections.newSetFromMap(new WeakHashMap<>());
-
-    public static void register() {
-        ServerTickEvents.END_WORLD_TICK.register(world -> {
-            long now = world.getTime();
-
-            for (var ent : world.iterateEntities()) {
-                if (!(ent instanceof LivingEntity entity)) continue;
-                UUID uuid = entity.getUuid();
-
-                track(uuid, ModEffects.DENDRO, entity, now);
-                track(uuid, ModEffects.HYDRO, entity, now);
-
-                long lastReaction = LAST_REACTION_TIME.getOrDefault(uuid, 0L);
-                if (now - lastReaction < REACTION_COOLDOWN) {
-                    updatePrev(uuid, entity);
-                    continue;
-                }
-
-                StatusEffectInstance dendro = entity.getStatusEffect(ModEffects.DENDRO);
-                StatusEffectInstance hydro = entity.getStatusEffect(ModEffects.HYDRO);
-
-                if (dendro == null || hydro == null) {
-                    REACTED.remove(uuid);
-                    updatePrev(uuid, entity);
-                    continue;
-                }
-
-                if (REACTED.contains(uuid)) {
-                    updatePrev(uuid, entity);
-                    continue;
-                }
-
-                Map<StatusEffect, Long> times = APPLY_TIME.get(uuid);
-                if (times == null) {
-                    updatePrev(uuid, entity);
-                    continue;
-                }
-
-                boolean dendroInfinite = dendro.getDuration() == -1;
-                boolean hydroInfinite = hydro.getDuration() == -1;
-
-                if (!dendroInfinite) {
-                    entity.removeStatusEffect(ModEffects.DENDRO);
-                    times.remove(ModEffects.DENDRO);
-                    PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.DENDRO, false);
-                }
-
-                if (!hydroInfinite) {
-                    entity.removeStatusEffect(ModEffects.HYDRO);
-                    times.remove(ModEffects.HYDRO);
-                    PREV.computeIfAbsent(uuid, k -> new HashMap<>()).put(ModEffects.HYDRO, false);
-                }
-
-                applyBloomReaction(world, entity);
-                LAST_REACTION_TIME.put(uuid, now);
-                REACTED.add(uuid);
-                updatePrev(uuid, entity);
-            }
-        });
+public class BoomEvent extends ElementReaction {
+    @Override protected int getCooldown() { return 12; }
+    @Override protected List<StatusEffect> getParticipatingEffects() {
+        return List.of(ModEffects.DENDRO, ModEffects.HYDRO);
     }
 
-
-    /**
-     * 应用绽放反应：伤害 + 生成种子
-     */
-    private static void applyBloomReaction(ServerWorld world, LivingEntity entity) {
-        UUID uuid = entity.getUuid();
-        if (REENTERING.contains(uuid)) return;
-
-        REENTERING.add(uuid);
-        try {
-            // 1. 造成伤害
-            entity.damage(ModDamageTypes.reaction_type_2(world), 1.0f);
-
-            // 2. 生成种子
-            spawnSeeds(world, entity);
-
-            // 3. 粒子特效
-            spawnBloomParticles(world, entity);
-
-        } finally {
-            REENTERING.remove(uuid);
-        }
+    @Override
+    protected void onReact(LivingEntity entity, ServerWorld world, Map<StatusEffect, Long> times) {
+        entity.damage(ModDamageTypes.reaction_type_2(world), 1.0f);
+        spawnSeeds(world, entity);
+        spawnBloomParticles(world, entity);
     }
 
-    /**
-     * 在生物脚底周围生成种子
-     * 70% 概率生成 1 个，30% 概率生成 2 个
-     */
-    private static void spawnSeeds(ServerWorld world, LivingEntity entity) {
+    private void spawnSeeds(ServerWorld world, LivingEntity entity) {
         Vec3d center = entity.getPos();
-
         int seedCount = 1 + (world.random.nextFloat() < 0.3f ? 1 : 0);
-
         int spawned = 0;
-        int maxAttempts = seedCount * 10;
-
-        for (int attempt = 0; spawned < seedCount && attempt < maxAttempts; attempt++) {
+        for (int attempt = 0; spawned < seedCount && attempt < seedCount * 10; attempt++) {
             double angle = world.random.nextDouble() * Math.PI * 2;
             double radius = 0.5 + world.random.nextDouble();
-
-            double candidateX = center.x + Math.cos(angle) * radius;
-            double candidateZ = center.z + Math.sin(angle) * radius;
-
-            double groundY = findGroundY(world, candidateX, center.y, candidateZ);
+            double cx = center.x + Math.cos(angle) * radius;
+            double cz = center.z + Math.sin(angle) * radius;
+            double groundY = findGroundY(world, cx, center.y, cz);
             if (groundY == Double.NEGATIVE_INFINITY) continue;
-
-            double spawnY = groundY + 0.5;
-
-            BlockPos spawnPos = BlockPos.ofFloored(candidateX, spawnY, candidateZ);
-            if (!world.getBlockState(spawnPos).isAir()) continue;
-
-            BlockPos headPos = spawnPos.up();
-            if (!world.getBlockState(headPos).isAir()) continue;
-
+            double sy = groundY + 0.5;
+            BlockPos sp = BlockPos.ofFloored(cx, sy, cz);
+            if (!world.getBlockState(sp).isAir() || !world.getBlockState(sp.up()).isAir()) continue;
             DendroSeedEntity seed = new DendroSeedEntity(ModEntities.DENDRO_SEED, world);
-            seed.setPosition(candidateX, spawnY, candidateZ);
+            seed.setPosition(cx, sy, cz);
             world.spawnEntity(seed);
             spawned++;
         }
     }
 
-    /**
-     * 从指定 Y 高度向下扫描，找到第一个非空气方块的上表面
-     * @return 地面 Y 坐标，找不到返回 Double.NEGATIVE_INFINITY
-     */
-    private static double findGroundY(ServerWorld world, double x, double startY, double z) {
-        int startBlockY = (int) Math.floor(startY);
-
+    private double findGroundY(ServerWorld w, double x, double sy, double z) {
         for (int dy = 0; dy >= -5; dy--) {
-            BlockPos pos = new BlockPos((int) Math.floor(x), startBlockY + dy, (int) Math.floor(z));
-            BlockState state = world.getBlockState(pos);
-
-            if (!state.isAir()) {
-                return pos.getY() + 1.0;
-            }
+            BlockPos p = new BlockPos((int)Math.floor(x), (int)Math.floor(sy) + dy, (int)Math.floor(z));
+            if (!w.getBlockState(p).isAir()) return p.getY() + 1.0;
         }
-
         return Double.NEGATIVE_INFINITY;
     }
 
-    /**
-     * 绽放反应粒子特效
-     */
-    private static void spawnBloomParticles(ServerWorld world, LivingEntity entity) {
-        double cx = entity.getX();
-        double cy = entity.getY() + entity.getHeight() * 0.5;
-        double cz = entity.getZ();
-
-        // 绿色草粒子爆发
+    private void spawnBloomParticles(ServerWorld w, LivingEntity e) {
+        double cx = e.getX(), cy = e.getY() + e.getHeight()*0.5, cz = e.getZ();
         for (int i = 0; i < 20; i++) {
-            double angle = world.random.nextDouble() * Math.PI * 2;
-            double radius = world.random.nextDouble() * 1.5;
-            double height = (world.random.nextDouble() - 0.5);
-
-            double px = cx + Math.cos(angle) * radius;
-            double py = cy + height;
-            double pz = cz + Math.sin(angle) * radius;
-
-            world.spawnParticles(
-                    net.minecraft.particle.ParticleTypes.HAPPY_VILLAGER,
-                    px, py, pz,
-                    1,
-                    Math.cos(angle) * 0.05,
-                    world.random.nextDouble() * 0.05,
-                    Math.sin(angle) * 0.05,
-                    0.05
-            );
+            double a = w.random.nextDouble() * Math.PI * 2, r = w.random.nextDouble() * 1.5;
+            w.spawnParticles(ParticleTypes.HAPPY_VILLAGER, cx+Math.cos(a)*r, cy+(w.random.nextDouble()-0.5), cz+Math.sin(a)*r, 1, Math.cos(a)*0.05, w.random.nextDouble()*0.05, Math.sin(a)*0.05, 0.05);
         }
-
-        // 水花飞溅
         for (int i = 0; i < 10; i++) {
-            double angle = world.random.nextDouble() * Math.PI * 2;
-            double radius = world.random.nextDouble();
-
-            double px = cx + Math.cos(angle) * radius;
-            double pz = cz + Math.sin(angle) * radius;
-
-            world.spawnParticles(
-                    net.minecraft.particle.ParticleTypes.FALLING_WATER,
-                    px, cy + 0.2, pz,
-                    1,
-                    Math.cos(angle) * 0.03,
-                    0.1,
-                    Math.sin(angle) * 0.03,
-                    0.02
-            );
+            double a = w.random.nextDouble() * Math.PI * 2, r = w.random.nextDouble();
+            w.spawnParticles(ParticleTypes.FALLING_WATER, cx+Math.cos(a)*r, cy+0.2, cz+Math.sin(a)*r, 1, Math.cos(a)*0.03, 0.1, Math.sin(a)*0.03, 0.02);
         }
-
-        // 地面圆形扩散环
         for (int ring = 0; ring < 2; ring++) {
-            double ringRadius = 0.5 + ring * 0.8;
+            double rr = 0.5 + ring * 0.8;
             for (int i = 0; i < 8; i++) {
-                double angle = (Math.PI * 2 / 8) * i;
-                world.spawnParticles(
-                        net.minecraft.particle.ParticleTypes.CLOUD,
-                        cx + Math.cos(angle) * ringRadius,
-                        cy - 0.3,
-                        cz + Math.sin(angle) * ringRadius,
-                        1,
-                        0, 0.02, 0,
-                        0.02
-                );
+                double a = (Math.PI*2/8)*i;
+                w.spawnParticles(ParticleTypes.CLOUD, cx+Math.cos(a)*rr, cy-0.3, cz+Math.sin(a)*rr, 1, 0, 0.02, 0, 0.02);
             }
         }
-
-        // 中心闪光
-        world.spawnParticles(
-                net.minecraft.particle.ParticleTypes.CRIT,
-                cx, cy, cz,
-                5,
-                0.2, 0.2, 0.2,
-                0.1
-        );
-    }
-
-    /** 更新 PREV 映射 */
-    private static void updatePrev(UUID uuid, LivingEntity entity) {
-        PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                .put(ModEffects.DENDRO,
-                        entity.getStatusEffect(ModEffects.DENDRO) != null);
-
-        PREV.computeIfAbsent(uuid, k -> new HashMap<>())
-                .put(ModEffects.HYDRO,
-                        entity.getStatusEffect(ModEffects.HYDRO) != null);
-    }
-
-    /** 记录首次获得时间 */
-    private static void track(UUID uuid, StatusEffect effect,
-                              LivingEntity entity, long now) {
-        Map<StatusEffect, Boolean> prevMap = PREV.get(uuid);
-        boolean had = prevMap != null && prevMap.getOrDefault(effect, false);
-        boolean has = entity.getStatusEffect(effect) != null;
-
-        if (has && !had) {
-            APPLY_TIME
-                    .computeIfAbsent(uuid, k -> new HashMap<>())
-                    .put(effect, now);
-        }
+        w.spawnParticles(ParticleTypes.CRIT, cx, cy, cz, 5, 0.2, 0.2, 0.2, 0.1);
     }
 }
