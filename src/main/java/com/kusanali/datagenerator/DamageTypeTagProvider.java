@@ -3,7 +3,6 @@ package com.kusanali.datagenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.entity.damage.DamageType;
-import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.TagKey;
@@ -32,6 +31,7 @@ public class DamageTypeTagProvider extends FabricTagProvider<DamageType> {
                 .add(new Identifier("minecraft", "player_attack"))
                 .add(new Identifier("minecraft", "arrow"))
                 .add(new Identifier("minecraft", "trident"));
+
         getOrCreateTagBuilder(REACTION)
                 .addOptional(new Identifier("kusanali", "reaction_type_1"))
                 .addOptional(new Identifier("kusanali", "reaction_type_2"))
@@ -39,6 +39,7 @@ public class DamageTypeTagProvider extends FabricTagProvider<DamageType> {
                 .addOptional(new Identifier("kusanali", "reaction_type_4"))
                 .addOptional(new Identifier("kusanali", "reaction_type_5"))
                 .addOptional(new Identifier("kusanali", "reaction_type_6"));
+
         getOrCreateTagBuilder(ELEMENT)
                 .addOptional(new Identifier("kusanali", "element_anemo"))
                 .addOptional(new Identifier("kusanali", "element_cyro"))

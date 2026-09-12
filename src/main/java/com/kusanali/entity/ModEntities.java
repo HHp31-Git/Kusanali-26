@@ -22,7 +22,7 @@ public class ModEntities {
                     FabricEntityTypeBuilder.create(SpawnGroup.MISC, DendroSeedEntity::new)
                             .dimensions(EntityDimensions.fixed(1.1f, 1.15f))
                             .trackRangeBlocks(64)
-                            .trackedUpdateRate(1)
+                            .trackedUpdateRate(3)
                             .build()
             );
     public static final EntityType<SeedProjectileEntity> SEED_PROJECTILE =
@@ -39,9 +39,13 @@ public class ModEntities {
             );
     public static final EntityType<ShroomboarEntity> SHROOMBOAR =
             //蕈猪
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, ShroomboarEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.9f, 0.9f))
-                    .build();
+            Registry.register(
+                    Registries.ENTITY_TYPE,
+                    new Identifier("kusanali", "shroomboar"),
+                    FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, ShroomboarEntity::new)
+                            .dimensions(EntityDimensions.fixed(0.9f, 0.9f))
+                            .build()
+            );
     public static final EntityType<HypostasisDendroEntity> HYPOSTASIS_DENDRO =
             //无相之草
             Registry.register(
