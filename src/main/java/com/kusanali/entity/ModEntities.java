@@ -66,10 +66,5 @@ public class ModEntities {
     }
 
     public static void register() {
-        Registry.register(
-                Registries.ENTITY_TYPE,
-                new Identifier("kusanali", "shroomboar"),
-                SHROOMBOAR
-        );
     }
 }

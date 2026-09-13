@@ -14,11 +14,6 @@ public class ModTrades {
                 12, 10, 0.05F)));
         TradeOfferHelper.registerWanderingTraderOffers(1, factories ->
                 factories.add((entity, random) -> new TradeOffer(
-                        new ItemStack(Items.EMERALD, 2),
-                        new ItemStack(ModBlocks.AJI_SAPLING, 1),
-                        12, 10, 0.05F)));
-        TradeOfferHelper.registerWanderingTraderOffers(1, factories ->
-                factories.add((entity, random) -> new TradeOffer(
                         new ItemStack(Items.EMERALD, 4),
                         new ItemStack(ModBlocks.PADISARAH, 1),
                         5, 20, 0.05F)));

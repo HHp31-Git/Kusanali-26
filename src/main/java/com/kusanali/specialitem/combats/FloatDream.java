@@ -31,9 +31,6 @@ public class FloatDream extends Item {
 
     /* ========================= Item Tooltip ========================= */
 
-    /**
-     * 添加物品说明
-     */
     @Override
     public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
         tooltip.add(Text.translatable("item.kusanali.float_dream.tooltip_1")
@@ -49,7 +46,7 @@ public class FloatDream extends Item {
     /* ========================= 右键使用 ========================= */
 
     /**
-     * 右键开始使用物品（蓄力阶段）
+     * 右键开始使用物品
      * - 检查冷却，防止连续触发
      * - 设置为当前手持动作，进入 finishUsing 流程
      */

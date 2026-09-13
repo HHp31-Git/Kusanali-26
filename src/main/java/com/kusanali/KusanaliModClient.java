@@ -17,11 +17,26 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 public class KusanaliModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        //资源包
+        Identifier packId = new Identifier(Kusanali.MOD_ID, "kusanali_texture");
+        FabricLoader.getInstance().getModContainer(Kusanali.MOD_ID).ifPresent(container ->
+                ResourceManagerHelper.registerBuiltinResourcePack(
+                packId,
+                container,
+                Text.literal("§a[吉祥草之音]附属材质包"),
+                ResourcePackActivationType.NORMAL
+        ));
+
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.SUMIRU_ROSE, RenderLayer.getCutout());
             BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_SUMIRU_ROSE, RenderLayer.getCutout());

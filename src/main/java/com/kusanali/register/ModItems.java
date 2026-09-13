@@ -52,7 +52,7 @@ public class ModItems {
     public static final Item FLOAT_DREAM =
             //千夜浮梦
             register("float_dream", new FloatDream(new Item.Settings()
-                    .maxCount(64)
+                    .maxCount(1)
                     .rarity(Rarity.EPIC)
                     .maxDamage(1027)));
 
@@ -139,7 +139,7 @@ public class ModItems {
             //生长碧翡屑
             register("emerald_sliver", new Item(new Item.Settings()));
 
-    public static final Item AKASA_CORE=
+    public static final Item AKASA_CORE =
             //终端核心
             register("akasa_core", new Item(new Item.Settings()
                     .maxCount(1)));

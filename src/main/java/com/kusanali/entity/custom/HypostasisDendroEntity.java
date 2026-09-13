@@ -33,7 +33,6 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -194,16 +193,6 @@ public class HypostasisDendroEntity extends TerritoryBossEntity implements GeoEn
     }
 
     private PlayState predicate(AnimationState<HypostasisDendroEntity> state) {
-        LivingEntity target = this.getTarget();
-        boolean hasTarget = (target != null && target.isAlive());
-
-        if (hasTarget) {
-            state.setAnimation(RawAnimation.begin().thenPlay("attack"));
-        } else if (state.getLimbSwingAmount() > 0.01f) {
-            state.setAnimation(RawAnimation.begin().thenPlay("walk"));
-        } else {
-            state.setAnimation(RawAnimation.begin().thenPlay("idle"));
-        }
 
         return PlayState.CONTINUE;
     }
