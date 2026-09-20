@@ -1,4 +1,4 @@
-package com.kusanali.mixin;
+package com.kusanali.mixin.entity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;

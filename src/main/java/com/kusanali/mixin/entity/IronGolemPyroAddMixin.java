@@ -1,17 +1,17 @@
-package com.kusanali.mixin;
+package com.kusanali.mixin.entity;
 
 import com.kusanali.register.ModEffects;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.MagmaCubeEntity;
-import net.minecraft.entity.passive.SnowGolemEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(SnowGolemEntity.class)
-public abstract class SnowGolenPyroAddMixin {
+@Mixin(IronGolemEntity.class)
+public abstract class IronGolemPyroAddMixin {
 
     @Inject(
             method = "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/world/World;)V",
@@ -22,11 +22,11 @@ public abstract class SnowGolenPyroAddMixin {
             World world,
             CallbackInfo ci
     ) {
-        SnowGolemEntity self = (SnowGolemEntity) (Object) this;
+        IronGolemEntity self = (IronGolemEntity) (Object) this;
 
         self.addStatusEffect(
                 new StatusEffectInstance(
-                        ModEffects.CYRO,
+                        ModEffects.GEO,
                         -1,   // 无限
                         0,
                         false, // 不显示粒子

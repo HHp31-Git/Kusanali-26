@@ -1,4 +1,4 @@
-package com.kusanali.mixin;
+package com.kusanali.mixin.enchant;
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;

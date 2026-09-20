@@ -1,17 +1,17 @@
-package com.kusanali.mixin;
+package com.kusanali.mixin.entity;
 
 import com.kusanali.register.ModEffects;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.mob.BlazeEntity;
 import net.minecraft.entity.mob.MagmaCubeEntity;
+import net.minecraft.entity.passive.StriderEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(BlazeEntity.class)
-public abstract class BlazePyroAddMixin {
+@Mixin(StriderEntity.class)
+public abstract class StriderPyroAddMixin {
 
     @Inject(
             method = "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/world/World;)V",
@@ -22,15 +22,15 @@ public abstract class BlazePyroAddMixin {
             World world,
             CallbackInfo ci
     ) {
-        BlazeEntity self = (BlazeEntity) (Object) this;
+        StriderEntity self = (StriderEntity) (Object) this;
 
         self.addStatusEffect(
                 new StatusEffectInstance(
                         ModEffects.PYRO,
-                        -1,
+                        -1,   // 无限
                         0,
-                        false,
-                        true,
+                        false, // 不显示粒子
+                        true,  // 显示图标
                         true
                 )
         );

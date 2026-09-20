@@ -37,6 +37,7 @@ public class KusanaliModClient implements ClientModInitializer {
                 ResourcePackActivationType.NORMAL
         ));
 
+        //花盆注册
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.SUMIRU_ROSE, RenderLayer.getCutout());
             BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_SUMIRU_ROSE, RenderLayer.getCutout());
@@ -44,14 +45,14 @@ public class KusanaliModClient implements ClientModInitializer {
 
             ClientVisionOverlay.init();
         });
-
+        //按键
         ModKeySet.register();
-
+        //物品HUD能力
         FloatDreamAbilityClient.register();
-
+        ClientVisionOverlay.register();
+        //方块渲染
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.AJI_SAPLING, RenderLayer.getCutout());
-
-
+        //生物实体
         EntityModelLayerRegistry.registerModelLayer(
                 ModModelLayers.DENDRO_SEED,
                 DendroSeedModel::getTexturedModelData
@@ -73,9 +74,9 @@ public class KusanaliModClient implements ClientModInitializer {
                 ModEntities.SHROOMBOAR,
                 ShroomboarRenderer::new
         );
-
-        ClientVisionOverlay.register();
-
-        EntityRendererRegistry.register(ModEntities.HYPOSTASIS_DENDRO, HypostasisDendroRenderer::new);
+        EntityRendererRegistry.register(
+                ModEntities.HYPOSTASIS_DENDRO,
+                HypostasisDendroRenderer::new
+        );
     }
 }

@@ -20,7 +20,7 @@ public class ModItems {
 
     public static final Item FOREST_REGALIA =
             //森林王器
-            register("forest_regalia", new SwordItem(ModToolMaterial.SUMIRU_CRAFT, 8, -3.2f,
+            register("forest_regalia", new SwordItem(ModToolMaterial.SUMIRU_CRAFT, 8, -3.5f,
                     new Item.Settings().maxCount(1).rarity(Rarity.RARE)));
 
     public static final Item TROUPE_SWORD =

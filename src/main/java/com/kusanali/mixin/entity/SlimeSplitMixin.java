@@ -1,4 +1,4 @@
-package com.kusanali.mixin;
+package com.kusanali.mixin.entity;
 
 import com.kusanali.register.ModEffects;
 import net.minecraft.entity.EntityType;
