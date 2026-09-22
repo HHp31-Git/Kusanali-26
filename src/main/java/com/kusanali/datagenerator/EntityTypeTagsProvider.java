@@ -30,6 +30,11 @@ public class EntityTypeTagsProvider extends FabricTagProvider.EntityTypeTagProvi
     public static final TagKey<EntityType<?>> DENDRO_ENTITY =
             TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(Kusanali.MOD_ID, "dendro_entity"));
 
+    public static final TagKey<EntityType<?>> ELITE =
+            TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(Kusanali.MOD_ID, "elite"));
+    public static final TagKey<EntityType<?>> WORLD_BOSS =
+            TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(Kusanali.MOD_ID, "world_boss"));
+
     @Override
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
         getOrCreateTagBuilder(PYRO_ENTITY)
@@ -51,6 +56,11 @@ public class EntityTypeTagsProvider extends FabricTagProvider.EntityTypeTagProvi
                 .add(EntityType.STRIDER);
 
         getOrCreateTagBuilder(DENDRO_ENTITY)
+                .add(ModEntities.HYPOSTASIS_DENDRO);
+
+        getOrCreateTagBuilder(ELITE)
+                .add(ModEntities.GIANT_ZOMBIE);
+        getOrCreateTagBuilder(WORLD_BOSS)
                 .add(ModEntities.HYPOSTASIS_DENDRO);
     }
 }

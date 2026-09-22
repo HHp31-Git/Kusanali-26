@@ -10,7 +10,10 @@
     "entity.SlimeSplitMixin",
     "entity.SnowGolenPyroAddMixin",
     "entity.StriderPyroAddMixin",
-    "entity.WitchAttackMixin"
+    "entity.WitchAttackMixin",
+    "rule.GiantZombieSpawn",
+    "rule.ZombieEquipmentMixin",
+    "rule.ZombieSpeedMixin"
   ],
   "injectors": {
     "defaultRequire": 1

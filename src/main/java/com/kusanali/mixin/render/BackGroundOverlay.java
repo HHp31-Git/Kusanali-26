@@ -35,11 +35,9 @@ public abstract class BackGroundOverlay {
 
         int rw, rh;
         if (sr >= ir) {
-            // 屏幕相对更宽：源区域横向取满，纵向裁剪
             rw = BW;
             rh = Math.round(BW / sr);
         } else {
-            // 屏幕相对更高：源区域纵向取满，横向裁剪
             rh = BH;
             rw = Math.round(BH * sr);
         }
@@ -47,7 +45,6 @@ public abstract class BackGroundOverlay {
         int u = (BW - rw) / 2;
         int v = (BH - rh) / 2;
 
-        // 目标区域 = 整个屏幕（sw, sh）；源区域 = 居中裁剪的 (u, v, rw, rh)
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, fadeAlpha);
         ctx.drawTexture(STATIC_BG, 0, 0, sw, sh, u, v, rw, rh, BW, BH);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

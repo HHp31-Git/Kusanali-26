@@ -4,10 +4,7 @@ import com.kusanali.entity.ModEntities;
 import com.kusanali.entity.client.*;
 import com.kusanali.entity.client.model.DendroSeedModel;
 import com.kusanali.entity.client.model.SeedProjectileModel;
-import com.kusanali.entity.client.renderer.DendroSeedRenderer;
-import com.kusanali.entity.client.renderer.HypostasisDendroRenderer;
-import com.kusanali.entity.client.renderer.SeedProjectileRenderer;
-import com.kusanali.entity.client.renderer.ShroomboarRenderer;
+import com.kusanali.entity.client.renderer.*;
 import com.kusanali.register.ModBlocks;
 import com.kusanali.register.ModKeySet;
 import com.kusanali.server.ClientVisionOverlay;
@@ -77,6 +74,10 @@ public class KusanaliModClient implements ClientModInitializer {
         EntityRendererRegistry.register(
                 ModEntities.HYPOSTASIS_DENDRO,
                 HypostasisDendroRenderer::new
+        );
+        EntityRendererRegistry.register(
+                ModEntities.GIANT_ZOMBIE,
+                GiantZombieRenderer::new
         );
     }
 }

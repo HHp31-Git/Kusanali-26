@@ -3,6 +3,7 @@ package com.kusanali.datagenerator;
 import com.kusanali.entity.ModEntities;
 import com.kusanali.register.ModBlocks;
 import com.kusanali.register.ModEnchants;
+import com.kusanali.register.ModGameRules;
 import com.kusanali.register.ModItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
@@ -130,5 +131,8 @@ public class EngLangProvider extends FabricLanguageProvider {
 
         translationBuilder.add(ModEntities.SHROOMBOAR, "shroomboar");
         translationBuilder.add(ModEntities.DENDRO_SEED, "dendro seed");
+        translationBuilder.add(ModEntities.GIANT_ZOMBIE, "giant zombie");
+
+        translationBuilder.add(ModGameRules.REINFORCE.getTranslationKey(), "Mob Reinforce");
     }
 }

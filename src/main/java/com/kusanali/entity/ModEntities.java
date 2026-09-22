@@ -3,15 +3,18 @@ package com.kusanali.entity;
 import com.kusanali.entity.custom.DendroSeedEntity;
 import com.kusanali.entity.custom.HypostasisDendroEntity;
 import com.kusanali.entity.custom.SeedProjectileEntity;
+import com.kusanali.entity.original.GiantZombieEntity;
 import com.kusanali.entity.original.ShroomboarEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.Heightmap;
 
 public class ModEntities {
     public static final EntityType<DendroSeedEntity> DENDRO_SEED =
@@ -64,6 +67,26 @@ public class ModEntities {
                 HypostasisDendroEntity.createHypostasisAttributes()
         );
     }
+    public static final EntityType<GiantZombieEntity> GIANT_ZOMBIE =
+            //巨人僵尸-盾
+            Registry.register(
+                    Registries.ENTITY_TYPE,
+                    Identifier.of("kusanali", "giant_zombie"),
+                    FabricEntityTypeBuilder.createMob()
+                            .spawnGroup(SpawnGroup.MONSTER)
+                            .entityFactory(GiantZombieEntity::new)
+                            .dimensions(EntityDimensions.fixed(1.4F, 3.7F))
+                            .trackRangeBlocks(64)
+                            .trackedUpdateRate(2)
+                            .spawnRestriction(
+                                    SpawnRestriction.Location.ON_GROUND,
+                                    Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+                                    (type, world,
+                                     reason, pos, random) ->
+                                            GiantZombieEntity.canNaturallySpawn(world, pos, random)
+                            )
+                            .build()
+            );
 
     public static void register() {
     }

@@ -2,6 +2,7 @@ package com.kusanali;
 
 import com.kusanali.entity.ModEntities;
 import com.kusanali.entity.custom.DendroSeedEntity;
+import com.kusanali.entity.original.GiantZombieEntity;
 import com.kusanali.entity.original.ShroomboarEntity;
 import com.kusanali.entity.tracker.SeedEffectTracker;
 import com.kusanali.event.damage.ModDamageImmunity;
@@ -50,6 +51,7 @@ public class Kusanali implements ModInitializer {
         ModTrades.register();
         ModEnchants.register();
         ModEntities.register();
+        ModGameRules.initialize();
         //特殊物品行为类
         FloatDream.registerAttackEvent();
         CorollaEvent.register();
@@ -102,6 +104,10 @@ public class Kusanali implements ModInitializer {
         FabricDefaultAttributeRegistry.register(
                 ModEntities.DENDRO_SEED,
                 DendroSeedEntity.createAttributes()
+        );
+        FabricDefaultAttributeRegistry.register(
+                ModEntities.GIANT_ZOMBIE,
+                GiantZombieEntity.createAttributes()
         );
         //伤害调用类
         ModDamageImmunity.registerAll();

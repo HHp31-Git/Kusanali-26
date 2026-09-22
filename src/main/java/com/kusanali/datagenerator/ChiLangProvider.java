@@ -3,6 +3,7 @@ package com.kusanali.datagenerator;
 import com.kusanali.entity.ModEntities;
 import com.kusanali.register.ModBlocks;
 import com.kusanali.register.ModEnchants;
+import com.kusanali.register.ModGameRules;
 import com.kusanali.register.ModItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
@@ -130,5 +131,8 @@ public class ChiLangProvider extends FabricLanguageProvider {
 
         translationBuilder.add(ModEntities.SHROOMBOAR, "蕈猪");
         translationBuilder.add(ModEntities.DENDRO_SEED, "草种子");
+        translationBuilder.add(ModEntities.GIANT_ZOMBIE, "巨人僵尸");
+
+        translationBuilder.add(ModGameRules.REINFORCE.getTranslationKey(), "怪物强化");
     }
 }
