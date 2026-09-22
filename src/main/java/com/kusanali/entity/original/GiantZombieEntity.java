@@ -12,6 +12,7 @@ import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -19,6 +20,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class GiantZombieEntity extends ZombieEntity {
     private int fireHits = 0;
@@ -26,6 +28,10 @@ public class GiantZombieEntity extends ZombieEntity {
 
     public GiantZombieEntity(EntityType<? extends ZombieEntity> type, World world) {
         super(type, world);
+        if (!world.isClient) {
+            ItemStack shield = new ItemStack(Items.SHIELD);
+            this.equipStack(EquipmentSlot.OFFHAND, shield);
+        }
     }
 
     public static DefaultAttributeContainer.Builder createAttributes() {
@@ -39,12 +45,12 @@ public class GiantZombieEntity extends ZombieEntity {
 
     @Override
     public EntityDimensions getDimensions(EntityPose pose) {
-        return EntityDimensions.fixed(1.4F, 3.7F);
+        return EntityDimensions.fixed(1.3F, 3.25F);
     }
 
     @Override
     public float getEyeHeight(EntityPose pose) {
-        return 3.35F;
+        return 2.95F;
     }
 
     @Override
@@ -126,5 +132,18 @@ public class GiantZombieEntity extends ZombieEntity {
         if (y < 30 || y > 150) return false;
         return HostileEntity.isSpawnDark(world, pos, random)
                 && world.getBlockState(pos.down()).isSolidBlock(world, pos.down());
+    }
+    @Override
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty,
+                                 SpawnReason spawnReason, @Nullable EntityData entityData,
+                                 @Nullable NbtCompound entityNbt) {
+        EntityData data = super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+
+        if (this.getOffHandStack().isEmpty()) {
+            ItemStack shield = new ItemStack(Items.SHIELD);
+            this.equipStack(EquipmentSlot.OFFHAND, shield);
+        }
+
+        return data;
     }
 }

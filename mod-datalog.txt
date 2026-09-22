@@ -179,3 +179,4 @@ new tag:elements-life
 
 2026.9.22
 制作了巨人僵尸
+对元素体系进行优化重构（石山再见），将tick判定改为onApplied判定

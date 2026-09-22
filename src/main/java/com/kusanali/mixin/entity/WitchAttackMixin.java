@@ -25,24 +25,20 @@ public abstract class WitchAttackMixin {
     private void kusanali$witchArrowElement(EntityHitResult hitResult, CallbackInfo ci) {
         ProjectileEntity self = (ProjectileEntity) (Object) this;
 
-        // 只处理箭
         if (!(self instanceof ArrowEntity arrow)) {
             return;
         }
 
-        // 必须是女巫扔的
         Entity owner = arrow.getOwner();
         if (!(owner instanceof WitchEntity)) {
             return;
         }
 
-        // 命中的必须是活体生物
         Entity hitEntity = hitResult.getEntity();
         if (!(hitEntity instanceof LivingEntity target)) {
             return;
         }
 
-        // 客户端不处理
         if (self.getWorld().isClient) {
             return;
         }

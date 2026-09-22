@@ -9,10 +9,12 @@ import net.minecraft.util.Identifier;
 
 public class GiantZombieRenderer extends MobEntityRenderer<GiantZombieEntity, ZombieEntityModel<GiantZombieEntity>> {
 
-    private static final float SCALE = 3.7f / 2.0f;
+    private static final float TARGET_HEIGHT = 3.25f;
+    private static final float ORIGINAL_HEIGHT = 2.0f;
+    private static final float SCALE = TARGET_HEIGHT / ORIGINAL_HEIGHT;
 
     public GiantZombieRenderer(EntityRendererFactory.Context context) {
-        super(context, new ZombieEntityModel<>(context.getPart(EntityModelLayers.ZOMBIE)), 0.8f * SCALE);
+        super(context, new ZombieEntityModel<>(context.getPart(EntityModelLayers.ZOMBIE)), 0.65f);
     }
 
     @Override

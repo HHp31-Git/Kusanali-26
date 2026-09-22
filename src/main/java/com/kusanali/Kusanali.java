@@ -12,9 +12,7 @@ import com.kusanali.event.element_reaction.*;
 import com.kusanali.event.entity.ShroomboarSpawn;
 import com.kusanali.event.item_getter.EmeraldGetter;
 import com.kusanali.event.item_getter.JungleAddition;
-import com.kusanali.event.reaction_status.FreezingEvent;
-import com.kusanali.event.reaction_status.IceBreakEvent;
-import com.kusanali.event.reaction_status.SuperconductivityEvent;
+import com.kusanali.event.element_reaction.SuperconductivityEvent;
 import com.kusanali.event.special.item.AjiLeavesDrop;
 import com.kusanali.event.special.item.CorollaEvent;
 import com.kusanali.event.special.item.TribbleEvent;
@@ -71,23 +69,8 @@ public class Kusanali implements ModInitializer {
         ElementDamageEvent.register();
         ElementEnchantEvent.onInitialize();
         //元素反应类
-        ReactionRegistry.register(new BoomEvent());
-        ReactionRegistry.register(new CrystallizationEvent());
-        ReactionRegistry.register(new DendroBurnEvent());
-        ReactionRegistry.register(new DiffusionEvent());
-        ReactionRegistry.register(new ElectrifyEvent());
-        ReactionRegistry.register(new EvaporationEvent());
-        ReactionRegistry.register(new IceSpawnEvent());
-        ReactionRegistry.register(new IntensifyEvent());
-        ReactionRegistry.register(new MeltEvent());
-        ReactionRegistry.register(new OverloadEvent());
-        ReactionRegistry.register(new SuperconductivityEventMain());
-        ReactionRegistry.register(new GrowingIntensifyEvent());
-        ReactionRegistry.register(new SuperIntensifyEvent());
-        SuperconductivityEvent.register();
-        FreezingEvent.register();
-        IceBreakEvent.register();
         ReactionRegistry.init();
+        SuperconductivityEvent.register();
         //附魔设置类
         EnchantWeaponSetting.register();
         ElementBowEnchantEvent.onInitialize();

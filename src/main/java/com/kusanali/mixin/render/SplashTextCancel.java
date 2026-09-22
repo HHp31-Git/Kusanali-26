@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SplashTextRenderer.class)
-public class SplashTextCancel {
+public abstract class SplashTextCancel {
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private void disableSplash(DrawContext context, int screenWidth,
                                TextRenderer textRenderer, int alpha, CallbackInfo ci) {

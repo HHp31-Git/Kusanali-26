@@ -12,54 +12,27 @@ import java.util.*;
 public abstract class ElementReaction {
 
     protected final Map<UUID, Map<StatusEffect, Long>> applyTime = new WeakHashMap<>();
-    protected final Map<UUID, Map<StatusEffect, Boolean>> prev = new WeakHashMap<>();
-    protected final Set<UUID> reacted = Collections.newSetFromMap(new WeakHashMap<>());
     protected final Map<UUID, Long> lastTriggerTime = new WeakHashMap<>();
-    protected final Set<UUID> reentering = Collections.newSetFromMap(new WeakHashMap<>());
 
     protected abstract int getCooldown();
     protected abstract List<StatusEffect> getParticipatingEffects();
     protected abstract void onReact(LivingEntity entity, ServerWorld world, Map<StatusEffect, Long> times);
 
-    public void tickEntity(LivingEntity entity, ServerWorld world, long now) {
-        UUID uuid = entity.getUuid();
+    public void checkAndReact(LivingEntity entity, ServerWorld world, StatusEffect changedEffect) {
+        if (!getParticipatingEffects().contains(changedEffect)) return;
 
-        for (StatusEffect effect : getParticipatingEffects()) {
-            track(uuid, effect, entity, now);
+        for (StatusEffect required : getParticipatingEffects()) {
+            if (!entity.hasStatusEffect(required)) return;
         }
 
-        long lastTime = lastTriggerTime.getOrDefault(uuid, 0L);
-        if (now - lastTime < getCooldown()) {
-            updatePrev(uuid, entity);
-            return;
-        }
+        long now = world.getTime();
+        long last = lastTriggerTime.getOrDefault(entity.getUuid(), 0L);
+        if (now - last < getCooldown()) return;
 
-        boolean hasAll = true;
-        for (StatusEffect effect : getParticipatingEffects()) {
-            if (!entity.hasStatusEffect(effect)) {
-                hasAll = false;
-                break;
-            }
-        }
-        if (!hasAll) {
-            reacted.remove(uuid);
-            updatePrev(uuid, entity);
-            return;
-        }
-
-        if (reacted.contains(uuid)) {
-            updatePrev(uuid, entity);
-            return;
-        }
-
-        Map<StatusEffect, Long> times = applyTime.get(uuid);
-        if (times == null) {
-            updatePrev(uuid, entity);
-            return;
-        }
-
-        handleEffectsAndReact(entity, world, uuid, times, now);
-        updatePrev(uuid, entity);
+        Map<StatusEffect, Long> times = applyTime.computeIfAbsent(entity.getUuid(), k -> new HashMap<>());
+        times.put(changedEffect, now);
+        handleEffectsAndReact(entity, world, entity.getUuid(), times, now);
+        lastTriggerTime.put(entity.getUuid(), now);
     }
 
     private void handleEffectsAndReact(LivingEntity entity, ServerWorld world, UUID uuid,
@@ -79,18 +52,14 @@ public abstract class ElementReaction {
         if (allInfinite) {
             onReact(entity, world, times);
             lastTriggerTime.put(uuid, now);
-            reacted.add(uuid);
             return;
         }
 
-        // 移除最早获得的有限效果
         StatusEffect earliest = null;
         long earliestTime = Long.MAX_VALUE;
-
         for (StatusEffect effect : effects) {
             var instance = entity.getStatusEffect(effect);
             if (instance == null || instance.getDuration() == -1) continue;
-
             Long time = times.get(effect);
             if (time != null && time < earliestTime) {
                 earliestTime = time;
@@ -101,27 +70,9 @@ public abstract class ElementReaction {
         if (earliest != null) {
             entity.removeStatusEffect(earliest);
             times.remove(earliest);
-            prev.computeIfAbsent(uuid, k -> new HashMap<>()).put(earliest, false);
         }
 
         onReact(entity, world, times);
         lastTriggerTime.put(uuid, now);
-        reacted.add(uuid);
-    }
-
-    protected void updatePrev(UUID uuid, LivingEntity entity) {
-        Map<StatusEffect, Boolean> map = prev.computeIfAbsent(uuid, k -> new HashMap<>());
-        for (StatusEffect effect : getParticipatingEffects()) {
-            map.put(effect, entity.getStatusEffect(effect) != null);
-        }
-    }
-
-    protected void track(UUID uuid, StatusEffect effect, LivingEntity entity, long now) {
-        Map<StatusEffect, Boolean> prevMap = prev.get(uuid);
-        boolean had = prevMap != null && prevMap.getOrDefault(effect, false);
-        boolean has = entity.getStatusEffect(effect) != null;
-        if (has && !had) {
-            applyTime.computeIfAbsent(uuid, k -> new HashMap<>()).put(effect, now);
-        }
     }
 }

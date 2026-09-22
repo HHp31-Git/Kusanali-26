@@ -4,14 +4,12 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "enchant.FlameFixMixin",
-    "entity.BlazePyroAddMixin",
-    "entity.IronGolemPyroAddMixin",
-    "entity.MagmaPyroAddMixin",
+    "entity.LatentAdhering",
+    "entity.LatentElseMobAdhering",
     "entity.SlimeSplitMixin",
-    "entity.SnowGolenPyroAddMixin",
-    "entity.StriderPyroAddMixin",
     "entity.WitchAttackMixin",
     "rule.GiantZombieSpawn",
+    "rule.WitchFireballMixin",
     "rule.ZombieEquipmentMixin",
     "rule.ZombieSpeedMixin"
   ],

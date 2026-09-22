@@ -1,7 +1,6 @@
 package com.kusanali.event.element_reaction;
 
 import com.kusanali.define.event.ElementReaction;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +16,27 @@ public class ReactionRegistry {
         reactions.add(reaction);
     }
 
+    public static List<ElementReaction> getReactions() {
+        return reactions;
+    }
+
     public static void init() {
-        ServerTickEvents.END_WORLD_TICK.register(world -> {
-            long now = world.getTime();
-            for (var ent : world.iterateEntities()) {
-                if (!(ent instanceof net.minecraft.entity.LivingEntity entity)) continue;
-                for (ElementReaction reaction : reactions) {
-                    reaction.tickEntity(entity, world, now);
-                }
-            }
-        });
+        register(new IceBreakEvent());
+        register(new FreezingEvent());
+        register(new ElectrifyEvent());
+        register(new OverloadEvent());
+        register(new BoomEvent());
+        register(new CrystallizationEvent());
+        register(new DendroBurnEvent());
+        register(new DiffusionEvent());
+        register(new ElectrifyEvent());
+        register(new EvaporationEvent());
+        register(new IceSpawnEvent());
+        register(new IntensifyEvent());
+        register(new MeltEvent());
+        register(new OverloadEvent());
+        register(new SuperconductivityEventMain());
+        register(new GrowingIntensifyEvent());
+        register(new SuperIntensifyEvent());
     }
 }
