@@ -56,8 +56,6 @@ public class SlimeRandomEvent {
                             true
                     ));
                 }
-
-                // 标记已初始化，不再重复处理
                 slime.getDataTracker().set(ELEMENT_INITIALIZED, true);
             }
         });

@@ -1,14 +1,12 @@
-package com.kusanali.event.element_reaction;
+package com.kusanali.register;
 
 import com.kusanali.define.event.ElementReaction;
+import com.kusanali.event.element_reaction.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 元素反应注册器，统一管理所有反应的 tick 调度
- */
-public class ReactionRegistry {
+public class ModReactionRegistry {
 
     private static final List<ElementReaction> reactions = new ArrayList<>();
 
@@ -29,12 +27,10 @@ public class ReactionRegistry {
         register(new CrystallizationEvent());
         register(new DendroBurnEvent());
         register(new DiffusionEvent());
-        register(new ElectrifyEvent());
         register(new EvaporationEvent());
         register(new IceSpawnEvent());
         register(new IntensifyEvent());
         register(new MeltEvent());
-        register(new OverloadEvent());
         register(new SuperconductivityEventMain());
         register(new GrowingIntensifyEvent());
         register(new SuperIntensifyEvent());

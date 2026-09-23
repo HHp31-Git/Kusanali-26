@@ -1,7 +1,7 @@
 package com.kusanali.effect.elements;
 
 import com.kusanali.define.event.ElementReaction;
-import com.kusanali.event.element_reaction.ReactionRegistry;
+import com.kusanali.register.ModReactionRegistry;
 import com.kusanali.register.ModEffects;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
@@ -18,7 +18,7 @@ public class AnemoEffect extends StatusEffect {
         super.onApplied(entity, attributes, amplifier);
         if (!entity.getWorld().isClient()) {
             ServerWorld world = (ServerWorld) entity.getWorld();
-            for (ElementReaction reaction : ReactionRegistry.getReactions()) {
+            for (ElementReaction reaction : ModReactionRegistry.getReactions()) {
                 reaction.checkAndReact(entity, world, ModEffects.ANEMO);
             }
         }

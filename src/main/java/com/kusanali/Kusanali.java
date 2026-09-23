@@ -1,5 +1,6 @@
 package com.kusanali;
 
+import com.kusanali.define.event.ElementAdhering;
 import com.kusanali.entity.ModEntities;
 import com.kusanali.entity.custom.DendroSeedEntity;
 import com.kusanali.entity.original.GiantZombieEntity;
@@ -8,7 +9,6 @@ import com.kusanali.entity.tracker.SeedEffectTracker;
 import com.kusanali.event.damage.ModDamageImmunity;
 import com.kusanali.event.element_adhering.*;
 import com.kusanali.event.element_enchant.*;
-import com.kusanali.event.element_reaction.*;
 import com.kusanali.event.entity.ShroomboarSpawn;
 import com.kusanali.event.item_getter.EmeraldGetter;
 import com.kusanali.event.item_getter.JungleAddition;
@@ -26,8 +26,12 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
+import net.minecraft.entity.LivingEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+
 public class Kusanali implements ModInitializer {
 
 	public static final String MOD_ID = "kusanali";
@@ -56,19 +60,27 @@ public class Kusanali implements ModInitializer {
         TribbleEvent.register();
         TribbleReactionEvent.register();
         //元素附着类
-        ElectroEvent.register();
-        HydroEvent.register();
+        List<ElementAdhering> adheringEvents = List.of(
+                new HydroEvent(),
+                new CyroSnowEvent(),
+                new ElectroEvent()
+        );
+        ServerTickEvents.END_WORLD_TICK.register(world -> {
+            for (var entity : world.iterateEntities()) {
+                if (!(entity instanceof LivingEntity living)) continue;
+                for (var event : adheringEvents) {
+                    event.tryAdhere(living, world);
+                }
+            }
+        });
         PyroEvent.register();
         SnowBallCyroEvent.register();
         DripstoneGeoEvent.register();
         ElementEntityAttackEvent.register();
         SlimeRandomEvent.register();
-        CyroSnowEvent.register();
-        RainingHydroEvent.register();
-        ElementDamageEvent.register();
         ElementEnchantEvent.onInitialize();
         //元素反应类
-        ReactionRegistry.init();
+        ModReactionRegistry.init();
         SuperconductivityEvent.register();
         //附魔设置类
         EnchantWeaponSetting.register();
