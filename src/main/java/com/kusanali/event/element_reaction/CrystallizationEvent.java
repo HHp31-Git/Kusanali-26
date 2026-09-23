@@ -16,9 +16,13 @@ public class CrystallizationEvent extends ElementReaction {
 
     @Override protected int getCooldown() { return 20; }
     @Override protected List<StatusEffect> getParticipatingEffects() { return List.of(ModEffects.GEO); }
-    @Override protected void onReact(LivingEntity e, ServerWorld w, Map<StatusEffect, Long> times) {
+    @Override
+    protected void onReact(LivingEntity e, ServerWorld w, Map<StatusEffect, Long> times) {
         StatusEffect targetEl = CRYSTALLIZABLE.stream().filter(e::hasStatusEffect).findFirst().orElse(null);
         if (targetEl == null) return;
+
+        if (e.hasStatusEffect(ModEffects.GEO)) return;
+
         int level = SHIELD_LEVEL.getOrDefault(targetEl, 1);
         e.addStatusEffect(new StatusEffectInstance(ModEffects.GEO, 300, level, false, true, true));
         double cx = e.getX(), cy = e.getY() + e.getHeight() * 0.5, cz = e.getZ();

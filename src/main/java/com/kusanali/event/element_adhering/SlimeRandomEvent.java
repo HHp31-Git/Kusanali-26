@@ -49,7 +49,7 @@ public class SlimeRandomEvent {
 
                     slime.addStatusEffect(new StatusEffectInstance(
                             effect,
-                            -1, // 无限时长
+                            -1,
                             0,
                             false,
                             true,

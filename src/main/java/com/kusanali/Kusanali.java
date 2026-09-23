@@ -59,7 +59,6 @@ public class Kusanali implements ModInitializer {
         ElectroEvent.register();
         HydroEvent.register();
         PyroEvent.register();
-        IronManAttackEvent.register();
         SnowBallCyroEvent.register();
         DripstoneGeoEvent.register();
         ElementEntityAttackEvent.register();
