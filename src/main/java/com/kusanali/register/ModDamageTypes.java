@@ -73,6 +73,11 @@ public class ModDamageTypes {
             RegistryKey.of(RegistryKeys.DAMAGE_TYPE,
                     new Identifier(Kusanali.MOD_ID, "reaction_type_6"));
 
+    public static final RegistryKey<DamageType> ABYSS =
+            //深渊伤害
+            RegistryKey.of(RegistryKeys.DAMAGE_TYPE,
+                    new Identifier(Kusanali.MOD_ID, "abyss"));
+
     public static DamageSource anemo(World world) {
         return new DamageSource(world.getRegistryManager()
                 .get(RegistryKeys.DAMAGE_TYPE)
@@ -139,10 +144,16 @@ public class ModDamageTypes {
         return new DamageSource(world.getRegistryManager()
                 .get(RegistryKeys.DAMAGE_TYPE)
                 .entryOf(REACTION_TYPE_5));
-    }public static DamageSource reaction_type_6(World world) {
+    }
+    public static DamageSource reaction_type_6(World world) {
         return new DamageSource(world.getRegistryManager()
                 .get(RegistryKeys.DAMAGE_TYPE)
                 .entryOf(REACTION_TYPE_6));
+    }
+    public static DamageSource abyss(World world) {
+        return new DamageSource(world.getRegistryManager()
+                .get(RegistryKeys.DAMAGE_TYPE)
+                .entryOf(ABYSS));
     }
 
     public static void register() {}

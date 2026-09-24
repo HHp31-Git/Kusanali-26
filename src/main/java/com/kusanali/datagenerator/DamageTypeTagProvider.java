@@ -23,6 +23,8 @@ public class DamageTypeTagProvider extends FabricTagProvider<DamageType> {
             TagKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier("kusanali", "reaction"));
     public static final TagKey<DamageType> ELEMENT =
             TagKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier("kusanali", "element"));
+    public static final TagKey<DamageType> ABYSS =
+            TagKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier("kusanali", "abyss"));
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {

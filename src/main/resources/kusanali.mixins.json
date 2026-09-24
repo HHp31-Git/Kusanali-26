@@ -3,7 +3,9 @@
   "package": "com.kusanali.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "abyss.WitherAbyssMixin",
     "enchant.FlameFixMixin",
+    "entity.EliteDouble",
     "entity.LatentAdhering",
     "entity.LatentElseMobAdhering",
     "entity.SlimeSplitMixin",

@@ -56,6 +56,10 @@ public class DamageTypeProvider extends FabricDynamicRegistryProvider {
                 "kusanali.element_pyro",
                 0.0f
         ));
+        entries.add(ModDamageTypes.ABYSS, new DamageType(
+                "kusanali.abyss",
+                0.6f
+        ));
     }
 
     @Override

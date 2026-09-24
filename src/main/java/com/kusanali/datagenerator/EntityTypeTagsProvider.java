@@ -42,6 +42,9 @@ public class EntityTypeTagsProvider extends FabricTagProvider.EntityTypeTagProvi
     public static final TagKey<EntityType<?>> WORLD_BOSS =
             TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(Kusanali.MOD_ID, "world_boss"));
 
+    public static final TagKey<EntityType<?>> ABYSS_ENTITY =
+            TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(Kusanali.MOD_ID, "abyss"));
+
     @Override
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
         getOrCreateTagBuilder(ELEMENTS_ENTITY)
@@ -116,5 +119,10 @@ public class EntityTypeTagsProvider extends FabricTagProvider.EntityTypeTagProvi
 
         getOrCreateTagBuilder(WORLD_BOSS)
                 .add(ModEntities.HYPOSTASIS_DENDRO);
+
+        getOrCreateTagBuilder(ABYSS_ENTITY)
+                .add(EntityType.WITHER_SKELETON)
+                .add(EntityType.WITHER);
+
     }
 }

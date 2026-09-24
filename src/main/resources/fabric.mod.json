@@ -33,8 +33,7 @@
 		"java": ">=17",
 		"fabric-api": "*",
         "geckolib": ">=4.7.1.2",
-        "terrablender": ">=3.0.1.10",
-        "translucencyfix": ">=2.2.0"
+        "terrablender": ">=3.0.1.10"
 	},
 	"suggests": {
 		"another-mod": "*"
