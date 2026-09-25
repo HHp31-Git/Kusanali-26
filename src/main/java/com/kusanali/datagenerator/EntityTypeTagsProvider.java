@@ -31,11 +31,11 @@ public class EntityTypeTagsProvider extends FabricTagProvider.EntityTypeTagProvi
     public static final TagKey<EntityType<?>> DENDRO_ENTITY =
             TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(Kusanali.MOD_ID, "dendro_entity"));
     public static final TagKey<EntityType<?>> ANEMO_ENTITY =
-            TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(Kusanali.MOD_ID, "dendro_entity"));
+            TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(Kusanali.MOD_ID, "anemo_entity"));
     public static final TagKey<EntityType<?>> ELECTRO_ENTITY =
-            TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(Kusanali.MOD_ID, "dendro_entity"));
+            TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(Kusanali.MOD_ID, "electro_entity"));
     public static final TagKey<EntityType<?>> HYDRO_ENTITY =
-            TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(Kusanali.MOD_ID, "dendro_entity"));
+            TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(Kusanali.MOD_ID, "hydro_entity"));
 
     public static final TagKey<EntityType<?>> ELITE =
             TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(Kusanali.MOD_ID, "elite"));

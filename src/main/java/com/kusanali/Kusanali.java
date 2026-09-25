@@ -6,6 +6,7 @@ import com.kusanali.entity.custom.DendroSeedEntity;
 import com.kusanali.entity.original.GiantZombieEntity;
 import com.kusanali.entity.original.ShroomboarEntity;
 import com.kusanali.entity.tracker.SeedEffectTracker;
+import com.kusanali.event.abyss.AbyssDamageStatus;
 import com.kusanali.event.damage.ModDamageImmunity;
 import com.kusanali.event.element_adhering.*;
 import com.kusanali.event.element_enchant.*;
@@ -105,6 +106,8 @@ public class Kusanali implements ModInitializer {
         );
         //伤害调用类
         ModDamageImmunity.registerAll();
+        //深渊行为类
+        AbyssDamageStatus.register();
         //物品类
         EmeraldGetter.register();
         JungleAddition.register();
