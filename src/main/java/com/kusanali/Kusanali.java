@@ -64,7 +64,11 @@ public class Kusanali implements ModInitializer {
         List<ElementAdhering> adheringEvents = List.of(
                 new HydroEvent(),
                 new CyroSnowEvent(),
-                new ElectroEvent()
+                new ElectroEvent(),
+                new BerryBushDendroEvent(),
+                new PyroEvent(),
+                new SlimeRandomEvent(),
+                new SnowBallCyroEvent()
         );
         ServerTickEvents.END_WORLD_TICK.register(world -> {
             for (var entity : world.iterateEntities()) {
@@ -74,8 +78,6 @@ public class Kusanali implements ModInitializer {
                 }
             }
         });
-        PyroEvent.register();
-        SnowBallCyroEvent.register();
         DripstoneGeoEvent.register();
         ElementEntityAttackEvent.register();
         SlimeRandomEvent.register();

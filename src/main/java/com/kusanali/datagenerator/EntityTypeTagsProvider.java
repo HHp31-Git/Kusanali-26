@@ -99,7 +99,6 @@ public class EntityTypeTagsProvider extends FabricTagProvider.EntityTypeTagProvi
                 .add(EntityType.AXOLOTL)
                 .add(EntityType.TROPICAL_FISH)
                 .add(EntityType.PUFFERFISH)
-                .add(EntityType.SILVERFISH)
                 .add(EntityType.COD)
                 .add(EntityType.SALMON)
                 .add(EntityType.TADPOLE)

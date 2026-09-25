@@ -1,23 +1,6 @@
 {
   "replace": false,
   "values": [
-    "kusanali:hypostasis",
-    "minecraft:guardian",
-    "minecraft:elder_guardian",
-    "minecraft:squid",
-    "minecraft:glow_squid",
-    "minecraft:axolotl",
-    "minecraft:tropical_fish",
-    "minecraft:pufferfish",
-    "minecraft:silverfish",
-    "minecraft:cod",
-    "minecraft:salmon",
-    "minecraft:tadpole",
-    "minecraft:drowned",
-    "minecraft:dolphin",
-    "minecraft:ender_dragon",
-    "minecraft:endermite",
-    "minecraft:shulker",
-    "minecraft:enderman"
+    "kusanali:hypostasis"
   ]
 }

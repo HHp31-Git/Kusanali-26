@@ -96,7 +96,8 @@ public class DendroSeedEntity extends LivingEntity {
             this.creationTime = this.getWorld().getTime();
             this.lastProjectileTime = this.creationTime;
         }
-        // 锁定位置：原地不动
+
+        // 锁定位置
         this.setVelocity(0, 0, 0);
         this.setNoGravity(true);
         this.prevX = this.getX();
@@ -115,11 +116,13 @@ public class DendroSeedEntity extends LivingEntity {
             return;
         }
 
+        // 检查electro效果
         if (serverWorld.getTime() - lastProjectileTime >= PROJECTILE_COOLDOWN) {
             lastProjectileTime = serverWorld.getTime();
             executeLogic();
         }
     }
+
 
     @Override
     public Arm getMainArm() {
@@ -128,16 +131,15 @@ public class DendroSeedEntity extends LivingEntity {
 
     private void executeLogic() {
         ServerWorld serverWorld = (ServerWorld) this.getWorld();
-
         if (SeedEffectTracker.hasEffect(this.getUuid(), ModEffects.PYRO)) {
             explodeWithEffect(serverWorld, ModEffects.PYRO, PYRO_DURATION, ParticleTypes.FLAME);
             return;
         }
-
         if (SeedEffectTracker.hasEffect(this.getUuid(), ModEffects.ELECTRO)) {
             spawnProjectileAndRemove(serverWorld);
         }
     }
+
 
     /**
      * 爆炸并赋予效果
@@ -187,14 +189,18 @@ public class DendroSeedEntity extends LivingEntity {
      * 生成弹射物并消失
      */
     private void spawnProjectileAndRemove(ServerWorld world) {
+        // 生成蔓生弹
         SeedProjectileEntity projectile = ModEntities.SEED_PROJECTILE.create(world);
         if (projectile != null) {
             projectile.setPosition(this.getX(), this.getY() + 0.5, this.getZ());
             projectile.initialize();
             world.spawnEntity(projectile);
         }
-        this.discard();
+
+        // 直接移除实体，不触发死亡动画
+        this.setRemoved(RemovalReason.DISCARDED);
     }
+
 
     private void spawnExplosionParticles(ServerWorld world, Vec3d center, net.minecraft.particle.ParticleEffect particle) {
         // 减少粒子数量，只保留视觉效果

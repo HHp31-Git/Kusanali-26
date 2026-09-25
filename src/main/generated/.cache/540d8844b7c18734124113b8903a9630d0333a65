@@ -1,9 +1,12 @@
-// 1.20.1	2026-09-24T12:28:28.9431217	Kusanali/Tags for minecraft:entity_type
+// 1.20.1	2026-09-25T16:17:30.2935294	Kusanali/Tags for minecraft:entity_type
 f0554955e824a759bb8bfa04be61f7c848a03c78 data\kusanali\tags\entity_types\pyro_entity.json
-d04741d37e57ba31e3769c9dcfd6b81648be205c data\kusanali\tags\entity_types\geo_entity.json
+2003ca66ddd5a91c2d49cee78eddeba1117f884a data\kusanali\tags\entity_types\electro_entity.json
 16d1085c28019df69e110fb3eb21a5e5ae84c541 data\kusanali\tags\entity_types\elements_entity.json
+d04741d37e57ba31e3769c9dcfd6b81648be205c data\kusanali\tags\entity_types\geo_entity.json
 26ebdd5f45fd94ba490e8292607d829de2ff47c9 data\kusanali\tags\entity_types\elite.json
 425b51477fc3a3a997b687bae365d5d8be300fa6 data\kusanali\tags\entity_types\cyro_entity.json
-cb5a4e49417445a7285e789d730ca728204dc9e4 data\kusanali\tags\entity_types\dendro_entity.json
+d4217bae1501918d6818bceca519481c46155b66 data\kusanali\tags\entity_types\dendro_entity.json
+8a23702b05296c8af5014d6aa6e9265ded85c7d9 data\kusanali\tags\entity_types\anemo_entity.json
+d4dff6a569649165496b4ca5bac803d594a383f1 data\kusanali\tags\entity_types\hydro_entity.json
 1d892a031ac9d7a4a7def7884d84ebee0f47360a data\kusanali\tags\entity_types\abyss.json
 d4217bae1501918d6818bceca519481c46155b66 data\kusanali\tags\entity_types\world_boss.json
