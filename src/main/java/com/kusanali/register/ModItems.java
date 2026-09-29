@@ -51,7 +51,7 @@ public class ModItems {
 
     public static final Item FLOAT_DREAM =
             //千夜浮梦
-            register("float_dream", new FloatDream(new Item.Settings()
+            register("float_dream", new FloatDream(new FloatDream.Settings()
                     .maxCount(1)
                     .rarity(Rarity.EPIC)
                     .maxDamage(1027)));

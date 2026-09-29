@@ -4,6 +4,10 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "abyss.WitherAbyssMixin",
+    "define.ArtifactEnchants",
+    "define.GreatSwordEnchants",
+    "define.SpearDefine",
+    "define.SpearEnchants",
     "enchant.FlameFixMixin",
     "entity.EliteDouble",
     "entity.LatentAdhering",

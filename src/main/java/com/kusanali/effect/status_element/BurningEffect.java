@@ -21,7 +21,7 @@ public class BurningEffect extends StatusEffect {
     private static final int DAMAGE_INTERVAL = 5;
 
     /** 每次伤害值 */
-    private static final float DAMAGE_PER_TICK = 0.5f;
+    private static final float DAMAGE_PER_TICK = 0.75f;
 
     @Override
     public boolean canApplyUpdateEffect(int duration, int amplifier) {

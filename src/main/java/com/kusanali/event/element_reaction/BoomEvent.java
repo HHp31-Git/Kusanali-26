@@ -24,7 +24,7 @@ public class BoomEvent extends ElementReaction {
 
     @Override
     protected void onReact(LivingEntity entity, ServerWorld world, Map<StatusEffect, Long> times) {
-        entity.damage(ModDamageTypes.reaction_type_2(world), 1.5f);
+        entity.damage(ModDamageTypes.reaction_type_2(world), 2.0f);
         Vec3d center = entity.getPos();
 
         // 计算圆周上的随机位置

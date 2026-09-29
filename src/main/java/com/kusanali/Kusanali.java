@@ -13,7 +13,6 @@ import com.kusanali.event.element_enchant.*;
 import com.kusanali.event.entity.ShroomboarSpawn;
 import com.kusanali.event.item_getter.EmeraldGetter;
 import com.kusanali.event.item_getter.JungleAddition;
-import com.kusanali.event.element_reaction.SuperconductivityEvent;
 import com.kusanali.event.special.item.AjiLeavesDrop;
 import com.kusanali.event.special.item.CorollaEvent;
 import com.kusanali.event.special.item.TribbleEvent;
@@ -56,7 +55,6 @@ public class Kusanali implements ModInitializer {
         ModEntities.register();
         ModGameRules.initialize();
         //特殊物品行为类
-        FloatDream.registerAttackEvent();
         CorollaEvent.register();
         TribbleEvent.register();
         TribbleReactionEvent.register();
@@ -84,7 +82,6 @@ public class Kusanali implements ModInitializer {
         ElementEnchantEvent.onInitialize();
         //元素反应类
         ModReactionRegistry.init();
-        SuperconductivityEvent.register();
         //附魔设置类
         EnchantWeaponSetting.register();
         ElementBowEnchantEvent.onInitialize();

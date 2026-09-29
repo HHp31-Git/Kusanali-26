@@ -15,7 +15,7 @@ public class GrowingIntensifyEvent extends ElementReaction {
     @Override protected int getCooldown() { return 20; }
     @Override protected List<StatusEffect> getParticipatingEffects() { return List.of(ModEffects.INTENSIFY, ModEffects.DENDRO); }
     @Override protected void onReact(LivingEntity e, ServerWorld w, Map<StatusEffect, Long> times) {
-        e.damage(ModDamageTypes.reaction_type_4(w), 2.0f);
+        e.damage(ModDamageTypes.reaction_type_4(w), 2.5f);
         Vec3d c = e.getPos();
         double cx = c.x, cy = c.y + e.getHeight() * 0.5, cz = c.z;
         w.spawnParticles(ParticleTypes.ELECTRIC_SPARK, cx, cy, cz, 8, 0.3, 0.3, 0.3, 0.08);

@@ -39,7 +39,7 @@ public class DiffusionEvent extends ElementReaction {
                 target.addStatusEffect(new StatusEffectInstance(spreadEl, EXTEND, 0, false, true, true));
             }
         });
-        entity.damage(ModDamageTypes.reaction_type_2(world), 0.5f);
+        entity.damage(ModDamageTypes.reaction_type_2(world), 1.0f);
 
         double cx = entity.getX(), cy = entity.getY() + entity.getHeight() * 0.5, cz = entity.getZ();
         world.spawnParticles(PARTICLES.get(spreadEl), cx, cy, cz, 10, 0.5, 0.5, 0.5, 0.05);

@@ -15,7 +15,7 @@ public class EvaporationEvent extends ElementReaction {
     @Override protected List<StatusEffect> getParticipatingEffects() { return List.of(ModEffects.PYRO, ModEffects.HYDRO); }
     @Override protected void onReact(LivingEntity e, ServerWorld w, Map<StatusEffect, Long> times) {
         boolean keepHydro = e.hasStatusEffect(ModEffects.PYRO) && Objects.requireNonNull(e.getStatusEffect(ModEffects.PYRO)).getDuration() == -1;
-        float dmg = keepHydro ? 1.5f : 2.0f;
+        float dmg = keepHydro ? 2.0f : 3.0f;
         e.damage(ModDamageTypes.reaction_type_1(w), dmg);
         double cx = e.getX(), cy = e.getY() + e.getHeight() * 0.5, cz = e.getZ();
         w.spawnParticles(ParticleTypes.CLOUD, cx, cy, cz, 20, 0.3, 0.3, 0.3, 0.05);

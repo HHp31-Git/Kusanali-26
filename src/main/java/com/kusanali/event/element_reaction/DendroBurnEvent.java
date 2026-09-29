@@ -5,6 +5,7 @@ import com.kusanali.register.ModDamageTypes;
 import com.kusanali.register.ModEffects;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 
@@ -17,5 +18,6 @@ public class DendroBurnEvent extends ElementReaction {
         e.damage(ModDamageTypes.reaction_type_2(w), 1.0f);
         double cx = e.getX(), cy = e.getY() + e.getHeight() * 0.5, cz = e.getZ();
         w.spawnParticles(ParticleTypes.FLAME, cx, cy, cz, 8, 0.3, 0.3, 0.3, 0.02);
+        e.addStatusEffect(new StatusEffectInstance(ModEffects.BURNING, 100, 0));
     }
 }

@@ -14,7 +14,7 @@ public class IceBreakEvent extends ElementReaction {
     @Override protected int getCooldown() { return 20; }
     @Override protected List<StatusEffect> getParticipatingEffects() { return List.of(ModEffects.FREEZING, ModEffects.PYRO); }
     @Override protected void onReact(LivingEntity e, ServerWorld w, Map<StatusEffect, Long> times) {
-        e.damage(ModDamageTypes.reaction_type_2(w), 1.0f);
+        e.damage(ModDamageTypes.reaction_type_2(w), 2.5f);
         double cx = e.getX(), cy = e.getY() + e.getHeight() * 0.5, cz = e.getZ();
         w.spawnParticles(ParticleTypes.ITEM_SNOWBALL, cx, cy, cz, 10, 0.3, 0.3, 0.3, 0.05);
     }

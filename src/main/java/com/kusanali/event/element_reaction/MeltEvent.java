@@ -16,7 +16,7 @@ public class MeltEvent extends ElementReaction {
     @Override protected void onReact(LivingEntity e, ServerWorld w, Map<StatusEffect, Long> times) {
         boolean keepPyro = e.hasStatusEffect(ModEffects.CYRO) && Objects.requireNonNull(e.getStatusEffect(ModEffects.CYRO)).getDuration() == -1;
         boolean keepCyro = e.hasStatusEffect(ModEffects.PYRO) && Objects.requireNonNull(e.getStatusEffect(ModEffects.PYRO)).getDuration() == -1;
-        float dmg = keepCyro ? 1.5f : 2.0f;
+        float dmg = keepCyro ? 2.0f : 3.0f;
         e.damage(ModDamageTypes.reaction_type_1(w), dmg);
 
         double cx=e.getX(), cy=e.getY()+e.getHeight()*0.5, cz=e.getZ();

@@ -39,9 +39,9 @@ public class ElectrifyEffect extends StatusEffect {
         int currentTick = serverWorld.getServer().getTicks();
         UUID uuid = entity.getUuid();
 
-        // 每 20 tick 造成一次伤害
+        // 每 10 tick 造成一次伤害
         int lastDamage = LAST_DAMAGE_TICK.getOrDefault(uuid, 0);
-        if (currentTick - lastDamage >= 20) {
+        if (currentTick - lastDamage >= 10) {
             LAST_DAMAGE_TICK.put(uuid, currentTick);
 
             // 使用 damage + 防重入
