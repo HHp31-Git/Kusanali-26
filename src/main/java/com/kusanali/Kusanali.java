@@ -19,7 +19,6 @@ import com.kusanali.event.special.item.TribbleEvent;
 import com.kusanali.event.special.item.TribbleReactionEvent;
 import com.kusanali.register.*;
 import com.kusanali.server.*;
-import com.kusanali.specialitem.combats.FloatDream;
 import com.kusanali.world.feature.ModWorldGeneration;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -66,7 +65,8 @@ public class Kusanali implements ModInitializer {
                 new BerryBushDendroEvent(),
                 new PyroEvent(),
                 new SlimeRandomEvent(),
-                new SnowBallCyroEvent()
+                new SnowBallCyroEvent(),
+                new DripstoneGeoEvent()
         );
         ServerTickEvents.END_WORLD_TICK.register(world -> {
             for (var entity : world.iterateEntities()) {
@@ -76,7 +76,6 @@ public class Kusanali implements ModInitializer {
                 }
             }
         });
-        DripstoneGeoEvent.register();
         ElementEntityAttackEvent.register();
         SlimeRandomEvent.register();
         ElementEnchantEvent.onInitialize();
@@ -84,7 +83,6 @@ public class Kusanali implements ModInitializer {
         ModReactionRegistry.init();
         //附魔设置类
         EnchantWeaponSetting.register();
-        ElementBowEnchantEvent.onInitialize();
         ElementConversion.registerAll();
         //世界生成类
         ModWorldGeneration.register();

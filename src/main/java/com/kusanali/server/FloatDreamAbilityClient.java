@@ -118,29 +118,46 @@ public class FloatDreamAbilityClient implements HudRenderCallback {
     private void renderCooldownHud(DrawContext drawContext, TextRenderer textRenderer,
                                    int windowWidth, int y, String prefix,
                                    long cooldownEnd, long cooldownStart, long currentTime) {
-        String text;
-        int color;
+        // 进度条尺寸配置
+        int barWidth = 100;
+        int barHeight = 12;
+        int x = windowWidth - barWidth - 10;
 
+        // 防御性计算：确保冷却时长至少为1毫秒
+        long totalCooldown = Math.max(cooldownEnd - cooldownStart, 1);
+        // 防御性计算：确保已过时间不小于0
+        long elapsed = Math.max(currentTime - cooldownStart, 0);
+
+        double percent;
         if (cooldownEnd == 0 || currentTime >= cooldownEnd) {
-            // 充能完成
-            text = prefix + "100%";
-            color = 0x00FF00;
+            percent = 100.0;
         } else {
-            long totalCooldown = cooldownEnd - cooldownStart;
-            if (totalCooldown <= 0) {
-                text = prefix + "100%";
-                color = 0x00FF00;
-            } else {
-                long elapsed = currentTime - cooldownStart;
-                int percent = (int) (elapsed * 100 / totalCooldown);
-                percent = Math.min(percent, 99);
-                text = String.format("%s%d%%", prefix, percent);
-                color = 0xFFFF00;
-            }
+            // 使用浮点数计算，避免整数溢出
+            percent = Math.min(99.9, (double) elapsed / totalCooldown * 100);
         }
 
-        int x = windowWidth - textRenderer.getWidth(text) - 10;
-        drawContext.drawTextWithShadow(textRenderer, text, x, y, color);
+        // 1. 绘制背景条（深灰色半透明）
+        drawContext.fill(x, y, x + barWidth, y + barHeight, 0x905050);
+
+        // 2. 绘制填充条（渐变色）
+        int fillWidth = (int) (barWidth * (percent / 100.0));
+        if (fillWidth > 0) {
+            // 根据百分比计算渐变色
+            int r = 0xFF;
+            int g = percent == 100 ? 0xFF : (int) (0xFF * (percent / 100.0));
+            int b = 0;
+            int fillColor = (r << 16) | (g << 8) | b;
+            drawContext.fill(x, y, x + fillWidth, y + barHeight, fillColor);
+        }
+
+        // 3. 绘制边框（纯黑）
+        drawContext.drawBorder(x, y, barWidth, barHeight, 0xFF0000);
+
+        // 4. 绘制居中百分比文本（保留1位小数）
+        String text = String.format("%s%.1f%%", prefix, percent);
+        int textX = x + (barWidth - textRenderer.getWidth(text)) / 2;
+        int textY = y + (barHeight - textRenderer.fontHeight) / 2;
+        drawContext.drawTextWithShadow(textRenderer, text, textX, textY, 0xFFFFFF);
     }
 }
 

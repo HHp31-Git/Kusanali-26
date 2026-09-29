@@ -38,7 +38,7 @@ public class TribbleReactionEvent {
             LAST_REACTION_TIME.put(entity.getUuid(), now);
 
             World world = entity.getWorld();
-            entity.damage(ModDamageTypes.element(world), REACTION_DAMAGE);
+            entity.damage(ModDamageTypes.dendro(world), REACTION_DAMAGE);
 
             return true;
         });

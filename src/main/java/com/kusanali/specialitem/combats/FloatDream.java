@@ -354,7 +354,6 @@ public class FloatDream extends Artifact {
     private static void spawnSquareParticles(World world, Vec3d center) {
         double hs = SQUARE_HALF_SIDE;
 
-        // 正方形的 4 个角
         Vec3d[] corners = {
                 new Vec3d(center.x - hs, center.y, center.z - hs),
                 new Vec3d(center.x + hs, center.y, center.z - hs),
@@ -363,7 +362,6 @@ public class FloatDream extends Artifact {
         };
 
         if (world.isClient) {
-            // 客户端：本地渲染
             for (int i = 0; i < 4; i++) {
                 Vec3d start = corners[i];
                 Vec3d end = corners[(i + 1) % 4];
@@ -376,7 +374,6 @@ public class FloatDream extends Artifact {
             }
             world.addParticle(ParticleTypes.HAPPY_VILLAGER, center.x, center.y, center.z, 0, 0, 0);
         } else {
-            // 服务端：同步给所有玩家
             ServerWorld serverWorld = (ServerWorld) world;
             for (int i = 0; i < 4; i++) {
                 Vec3d start = corners[i];
@@ -403,7 +400,7 @@ public class FloatDream extends Artifact {
     /** 可用兰那罗之花修复 */
     @Override
     public boolean canRepair(ItemStack stack, ItemStack ingredient) {
-        return ingredient.getItem() == ModItems.ARANAS_FLOWER;
+        return ingredient.getItem() == ModItems.EMERALD_GEMSTONE;
     }
 
     /** 允许附魔 */
