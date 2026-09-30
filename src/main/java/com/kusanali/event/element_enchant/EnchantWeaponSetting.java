@@ -29,7 +29,7 @@ public class EnchantWeaponSetting {
             MOD_ID + ":dendro_enchant_bow", MOD_ID + ":hydro_enchant_bow", MOD_ID + ":pyro_enchant_bow", MOD_ID + ":cyro_enchant_bow"
     );
 
-    // 统一管理弓箭附魔与对应元素效果的映射 (替代原 ALLOW_DAMAGE 中的 if-else 链)
+    // 统一管理弓箭附魔与对应元素效果的映射
     private static final Map<Enchantment, StatusEffectInstance> BOW_ENCHANT_EFFECTS = Map.of(
             ModEnchants.ANEMO_ENCHANT_BOW, new StatusEffectInstance(ModEffects.ANEMO, 5, 0, false, false),
             ModEnchants.GEO_ENCHANT_BOW, new StatusEffectInstance(ModEffects.GEO, 5, 0, false, false),

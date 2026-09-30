@@ -26,11 +26,10 @@ public class ShroomboarSpawn {
                 .add(ModificationPhase.REPLACEMENTS,
                         BiomeSelectors.includeByKey(JUNGLE_BIOMES),
                         ctx -> {
-                            var spawns = ctx.getSpawnSettings();   // 1.20.1 正确
+                            var spawns = ctx.getSpawnSettings();
 
-                            // 原版丛林猪权重 = 10
-                            int pigW = 1;     // 10%
-                            int jungleW = 9;  // 90%
+                            int pigW = 1;
+                            int jungleW = 9;
 
                             spawns.removeSpawnsOfEntityType(EntityType.PIG);
 
@@ -43,6 +42,6 @@ public class ShroomboarSpawn {
                                     new SpawnSettings.SpawnEntry(
                                             ModEntities.SHROOMBOAR, Weight.of(jungleW), 3, 4)
                             );
-                        });
+            });
     }
 }

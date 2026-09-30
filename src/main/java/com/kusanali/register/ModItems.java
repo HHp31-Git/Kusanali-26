@@ -2,7 +2,7 @@ package com.kusanali.register;
 
 import com.kusanali.specialitem.combats.Client;
 import com.kusanali.specialitem.combats.FloatDream;
-import com.kusanali.specialitem.Halvamaze;
+import com.kusanali.specialitem.foods.Halvamaze;
 import com.kusanali.specialitem.elements.*;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;

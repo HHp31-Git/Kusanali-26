@@ -19,6 +19,7 @@ import com.kusanali.event.special.item.TribbleEvent;
 import com.kusanali.event.special.item.TribbleReactionEvent;
 import com.kusanali.register.*;
 import com.kusanali.server.*;
+import com.kusanali.specialitem.combats.FloatDream;
 import com.kusanali.world.feature.ModWorldGeneration;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -54,6 +55,7 @@ public class Kusanali implements ModInitializer {
         ModEntities.register();
         ModGameRules.initialize();
         //特殊物品行为类
+        FloatDream.registerAttackEvent();
         CorollaEvent.register();
         TribbleEvent.register();
         TribbleReactionEvent.register();
@@ -78,7 +80,6 @@ public class Kusanali implements ModInitializer {
         });
         ElementEntityAttackEvent.register();
         SlimeRandomEvent.register();
-        ElementEnchantEvent.onInitialize();
         //元素反应类
         ModReactionRegistry.init();
         //附魔设置类
@@ -101,6 +102,7 @@ public class Kusanali implements ModInitializer {
                 ModEntities.GIANT_ZOMBIE,
                 GiantZombieEntity.createAttributes()
         );
+        ServerTickEvents.END_WORLD_TICK.register(SeedEffectTracker::tickAll);
         //伤害调用类
         ModDamageImmunity.registerAll();
         //深渊行为类
@@ -125,8 +127,6 @@ public class Kusanali implements ModInitializer {
         FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.STRIPPED_AJI_LOG, 5, 5);
         FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.AJI_WOOD, 5, 5);
         FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.STRIPPED_AJI_WOOD, 5, 5);
-        //生物注册
-        ServerTickEvents.END_WORLD_TICK.register(SeedEffectTracker::tickAll);
 
         LOGGER.info("All settings done");
     }

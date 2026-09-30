@@ -8,8 +8,6 @@ import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.world.World;
 
-import java.util.Objects;
-
 public class PyroEvent extends ElementAdhering {
     @Override
     protected StatusEffect getTargetEffect() {
@@ -18,8 +16,11 @@ public class PyroEvent extends ElementAdhering {
 
     @Override
     protected boolean checkCondition(LivingEntity entity, World world) {
-        return isFireDamage(Objects.requireNonNull(entity.getRecentDamageSource()));
+        DamageSource damageSource = entity.getRecentDamageSource();
+        if (damageSource == null) return false;
+        return isFireDamage(damageSource);
     }
+
 
     private static boolean isFireDamage(DamageSource source) {
         return source.isOf(DamageTypes.IN_FIRE)

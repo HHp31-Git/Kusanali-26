@@ -23,25 +23,25 @@ public abstract class LatentElseMobAdhering {
         var type = self.getType();
         if (type.isIn(EntityTypeTagsProvider.PYRO_ENTITY)) {
             self.addStatusEffect(new StatusEffectInstance(
-                    ModEffects.PYRO, -1, 0, false, true, true));
+                    ModEffects.PYRO, -1, 0, false, false, false));
         } else if (type.isIn(EntityTypeTagsProvider.HYDRO_ENTITY)) {
             self.addStatusEffect(new StatusEffectInstance(
-                    ModEffects.HYDRO, -1, 0, false, true, true));
+                    ModEffects.HYDRO, -1, 0, false, false, false));
         } else if (type.isIn(EntityTypeTagsProvider.ANEMO_ENTITY)) {
             self.addStatusEffect(new StatusEffectInstance(
-                    ModEffects.ANEMO, -1, 0, false, true, true));
+                    ModEffects.ANEMO, -1, 0, false, false, false));
         } else if (type.isIn(EntityTypeTagsProvider.GEO_ENTITY)) {
             self.addStatusEffect(new StatusEffectInstance(
-                    ModEffects.GEO, -1, 0, false, true, true));
+                    ModEffects.GEO, -1, 0, false, false, false));
         } else if (type.isIn(EntityTypeTagsProvider.ELECTRO_ENTITY)) {
             self.addStatusEffect(new StatusEffectInstance(
-                    ModEffects.ELECTRO, -1, 0, false, true, true));
+                    ModEffects.ELECTRO, -1, 0, false, false, false));
         } else if (type.isIn(EntityTypeTagsProvider.DENDRO_ENTITY)) {
             self.addStatusEffect(new StatusEffectInstance(
-                    ModEffects.DENDRO, -1, 0, false, true, true));
+                    ModEffects.DENDRO, -1, 0, false, false, false));
         } else if (type.isIn(EntityTypeTagsProvider.CYRO_ENTITY)) {
             self.addStatusEffect(new StatusEffectInstance(
-                    ModEffects.CYRO, -1, 0, false, true, true));
+                    ModEffects.CYRO, -1, 0, false, false, false));
         }
         self.addCommandTag("kusanali.latent_applied");
     }
