@@ -134,7 +134,7 @@ public class FloatDreamAbilityClient implements HudRenderCallback {
 
     private void renderCooldownHud(DrawContext drawContext, TextRenderer textRenderer,
                                    int windowWidth, int y, String prefix,
-                                   long cooldownEnd, long cooldownStart, long currentTime,
+                                   long ignoredCooldownEnd, long ignoredCooldownStart, long ignoredCurrentTime,
                                    float cachedPercent, boolean isComplete) {
         int barWidth = 100;
         int barHeight = 12;
